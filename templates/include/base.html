@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+
+
+
+
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <title>Stroyka</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <meta name="description" content="{% block description %}  {% endblock description %}">
+{% include 'include/head.html' %}
+
+{% block head %}
+
+
+
+{% endblock head %}
+
+</head>
+
+<body>
+
+    <div class="site">
+        {% include 'include/header.html' %}
+        <div class="site__body">
+            
+        </div>
+    </div>
+    {% include 'include/footer.html' %}
+    {% block footer %}
+
+
+
+    {% endblock footer %}
+
+    {% include 'include/footer_link.html' %}
+    {% block footer_link %}
+
+
+
+    {% endblock footer_link %}
+
+</body>
+
+</html>
