@@ -1,4 +1,4 @@
-{% load static %}
+{%load static%}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -29,7 +29,11 @@
     <div class="site">
         {% include 'include/header.html' %}
         <div class="site__body">
+            {% block content %}
+
             
+
+            {% endblock content %}
         </div>
     </div>
     {% include 'include/footer.html' %}

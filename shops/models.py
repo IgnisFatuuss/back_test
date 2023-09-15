@@ -12,12 +12,13 @@ class Products(models.Model):
     available = models.BooleanField(default=True, verbose_name='Доступность')
     create = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
     updated = models.DateTimeField( auto_now_add=True, verbose_name='Обновлено')
-    category = models.ManyToManyField('categories', verbose_name='Категория')
+    category = models.ManyToManyField('categories', verbose_name='Категория', related_name='categories')
     tag = models.ManyToManyField('tags', verbose_name='Тэг')
     brand = models.ForeignKey('brands', on_delete=models.PROTECT, verbose_name='Брэнд', null=True)
 
     def __str__(self):
         return self.name
+
      
     class Meta:
         verbose_name = "Товар"
@@ -26,7 +27,7 @@ class Products(models.Model):
 class Categories(models.Model):
     name = models.CharField(max_length=255, verbose_name='Имя')
     slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name='URL')
-    img = models.ImageField(upload_to=None, verbose_name='Изображение')
+    img = models.ImageField(upload_to='shops/categories/', verbose_name='Изображение')
     parent = models.ForeignKey('self', on_delete=models.PROTECT, related_name='child', verbose_name='Родитель', blank=True, null=True)
 
     class Meta:
@@ -50,7 +51,7 @@ class Tags(models.Model):
 class Brands(models.Model):
     name = models.CharField(max_length=255, verbose_name='Имя')
     slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name='URL')
-    logo = models.ImageField(upload_to=None, verbose_name='Логотип')
+    logo = models.ImageField(upload_to='shops/brands/', verbose_name='Логотип')
 
     class Meta:
         verbose_name = 'Брэнд'
@@ -60,7 +61,7 @@ class Brands(models.Model):
         return self.name
 
 class Variations(models.Model):
-    products = models.ForeignKey(Products, on_delete=models.PROTECT, verbose_name='Продукт')
+    products = models.ForeignKey(Products, on_delete=models.PROTECT, verbose_name='Продукт', related_name='variations')
     STATUS = [(1, 'Выбор'), (2, 'Цифры')]
     status = models.PositiveIntegerField(default=1, choices=STATUS, blank=True, null=True, verbose_name='Статус')
     name = models.CharField(max_length=255, verbose_name='Имя')
@@ -113,7 +114,7 @@ class Faqs(models.Model):
         verbose_name_plural = 'Часто задаваемые вопросы'
 
 class Reviews(models.Model):
-    product = models.ForeignKey(Products, on_delete=models.PROTECT, verbose_name='Продукт')
+    product = models.ForeignKey(Products, on_delete=models.PROTECT, verbose_name='Продукт', related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
     date = models.DateField(auto_now=True, verbose_name='Дата')
     text = models.TextField(verbose_name='Текст')
@@ -134,8 +135,8 @@ class Emotions(models.Model):
         verbose_name_plural = 'Эмоции'
 
 class Gallereis(models.Model):
-    image = models.ImageField(upload_to=None, verbose_name='Картинка')
-    variations = models.ForeignKey(Variations, on_delete=models.PROTECT, verbose_name='Вариация')
+    image = models.ImageField(upload_to='shops/', verbose_name='Картинка')
+    variations = models.ForeignKey(Variations, on_delete=models.PROTECT, verbose_name='Вариация', related_name='gallereis')
 
     
     class Meta:

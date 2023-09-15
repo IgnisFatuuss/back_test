@@ -9,6 +9,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('', include('website.urls')),
+    path('', include('shops.urls')),
+    path('pages', include('django.contrib.flatpages.urls'))
 ]
 
 if settings.DEBUG:
