@@ -28,7 +28,8 @@ class ProductListView(ListView, GetTags):
         categories = Categories.objects.all()
         brands = Brands.objects.all()
         variations = Variations.objects.all()
-        images = Gallereis.objects.filter(variation = variations)
+        product = get_object_or_404(Products, slug=self.kwargs['slug'])
+        images = Gallereis.objects.filter(variations__products=product)
         context['categories'] = categories
         context['brands'] = brands
         context['image'] = images

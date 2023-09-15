@@ -55,10 +55,9 @@
                             </div>
                             <div class="product-card__image product-image">
                                 <a href="product/{{  product.slug }}/" class="product-image__body">
-
-                                    
-                                        <img src="{{ image.image.url }}" >
-
+                                    {% for image in images %}
+                                    <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                                    {% endfor %}
                                     
                                 </a>
                             </div>
