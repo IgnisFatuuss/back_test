@@ -1,0 +1,238 @@
+{% extends 'include/base.html' %}
+
+{%load static%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock head %}
+
+<!-- content -->
+{% block content %}
+<div class="site">
+    <div class="site__body">
+        <div class="block-map block">
+            <div class="block-map__body">
+                <iframe src='https://maps.google.com/maps?q=Holbrook-Palmer%20Park&amp;t=&amp;z=13&amp;ie=UTF8&amp;iwloc=&amp;output=embed' frameborder='0' scrolling='no' marginheight='0' marginwidth='0'></iframe>
+            </div>
+        </div>
+        <div class="page-header">
+            <div class="page-header__container container">
+                <div class="page-header__breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="index.html">Home</a>
+                                <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                    <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                                </svg>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="">Breadcrumb</a>
+                                <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                    <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                                </svg>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="page-header__title">
+                    <h1>Contact Us</h1>
+                </div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="container">
+                <div class="card mb-0">
+                    <div class="card-body contact-us">
+                        <div class="contact-us__container">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 pb-4 pb-lg-0">
+                                    <h4 class="contact-us__header card-title">Our Address</h4>
+                                    <div class="contact-us__address">
+                                        <p>
+                                            715 Fake Ave, Apt. 34, New York, NY 10021 USA<br>
+                                            Email: stroyka@example.com<br>
+                                            Phone Number: +1 754 000-00-00
+                                        </p>
+                                        <p>
+                                            <strong>Opening Hours</strong><br>
+                                            Monday to Friday: 8am-8pm<br>
+                                            Saturday: 8am-6pm<br>
+                                            Sunday: 10am-4pm
+                                        </p>
+                                        <p>
+                                            <strong>Comment</strong><br>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur suscipit suscipit mi, non
+                                            tempor nulla finibus eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <h4 class="contact-us__header card-title">Leave us a Message</h4>
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="form-name">Your Name</label>
+                                                <input type="text" id="form-name" class="form-control" placeholder="Your Name">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="form-email">Email</label>
+                                                <input type="email" id="form-email" class="form-control" placeholder="Email Address">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="form-subject">Subject</label>
+                                            <input type="text" id="form-subject" class="form-control" placeholder="Subject">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="form-message">Message</label>
+                                            <textarea id="form-message" class="form-control" rows="4"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Send Message</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- site__body / end -->
+    <!-- site__footer -->
+    <footer class="site__footer">
+        <div class="site-footer">
+            <div class="container">
+                <div class="site-footer__widgets">
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="site-footer__widget footer-contacts">
+                                <h5 class="footer-contacts__title">Contact Us</h5>
+                                <div class="footer-contacts__text">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in feugiat lorem. Pellentque ac placerat tellus.
+                                </div>
+                                <ul class="footer-contacts__contacts">
+                                    <li><i class="footer-contacts__icon fas fa-globe-americas"></i> 715 Fake Street, New York 10021 USA</li>
+                                    <li><i class="footer-contacts__icon far fa-envelope"></i> stroyka@example.com</li>
+                                    <li><i class="footer-contacts__icon fas fa-mobile-alt"></i> (800) 060-0730, (800) 060-0730</li>
+                                    <li><i class="footer-contacts__icon far fa-clock"></i> Mon-Sat 10:00pm - 7:00pm</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <div class="site-footer__widget footer-links">
+                                <h5 class="footer-links__title">Information</h5>
+                                <ul class="footer-links__list">
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">About Us</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Delivery Information</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Privacy Policy</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Brands</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Contact Us</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Returns</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Site Map</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <div class="site-footer__widget footer-links">
+                                <h5 class="footer-links__title">My Account</h5>
+                                <ul class="footer-links__list">
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Store Location</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Order History</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Wish List</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Newsletter</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Specials</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Gift Certificates</a></li>
+                                    <li class="footer-links__item"><a href="" class="footer-links__link">Affiliate</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-4">
+                            <div class="site-footer__widget footer-newsletter">
+                                <h5 class="footer-newsletter__title">Newsletter</h5>
+                                <div class="footer-newsletter__text">
+                                    Praesent pellentesque volutpat ex, vitae auctor lorem pulvinar mollis felis at lacinia.
+                                </div>
+                                <form action="" class="footer-newsletter__form">
+                                    <label class="sr-only" for="footer-newsletter-address">Email Address</label>
+                                    <input type="text" class="footer-newsletter__form-input form-control" id="footer-newsletter-address" placeholder="Email Address...">
+                                    <button class="footer-newsletter__form-button btn btn-primary">Subscribe</button>
+                                </form>
+                                <div class="footer-newsletter__text footer-newsletter__text--social">
+                                    Follow us on social networks
+                                </div>
+                                <!-- social-links -->
+                                <div class="social-links footer-newsletter__social-links social-links--shape--circle">
+                                    <ul class="social-links__list">
+                                        <li class="social-links__item">
+                                            <a class="social-links__link social-links__link--type--rss" href="" target="_blank">
+                                                <i class="fas fa-rss"></i>
+                                            </a>
+                                        </li>
+                                        <li class="social-links__item">
+                                            <a class="social-links__link social-links__link--type--youtube" href="" target="_blank">
+                                                <i class="fab fa-youtube"></i>
+                                            </a>
+                                        </li>
+                                        <li class="social-links__item">
+                                            <a class="social-links__link social-links__link--type--facebook" href="" target="_blank">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                        </li>
+                                        <li class="social-links__item">
+                                            <a class="social-links__link social-links__link--type--twitter" href="" target="_blank">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                        </li>
+                                        <li class="social-links__item">
+                                            <a class="social-links__link social-links__link--type--instagram" href="" target="_blank">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- social-links / end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-footer__bottom">
+                    <div class="site-footer__copyright">
+                        <!-- copyright -->
+                        Powered by HTML — Design by <a href="https://themeforest.net/user/kos9" target="_blank">Kos</a>
+                        <!-- copyright / end -->
+                    </div>
+                    <div class="site-footer__payments">
+                        <img src="images/payments.png" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="totop">
+                <div class="totop__body">
+                    <div class="totop__start"></div>
+                    <div class="totop__container container"></div>
+                    <div class="totop__end">
+                        <button type="button" class="totop__button">
+                            <svg width="13px" height="8px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-up-13x8"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- site__footer / end -->
+</div>
+<!-- site / end -->
+<!-- quickview-modal -->
+
+{% endblock content %}
+
+<!-- footer -->
+{% block footer_link %}
+
+{% endblock footer_link %}

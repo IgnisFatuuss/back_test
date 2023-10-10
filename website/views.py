@@ -5,10 +5,7 @@ from django.views.generic import ListView, DetailView
 # Create your views here.
 
 
-class HomeView(ListView):
-    model = Pages
-    template_name = 'home.html'
-    context_object_name = 'Pages'
+
 
 class BlogListView(ListView):
     model = Blogs

@@ -1,0 +1,85 @@
+{% extends 'include/base.html' %}
+
+{%load static%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock head %}
+
+<!-- content -->
+{% block content %}
+<div class="site__body">
+    <div class="page-header">
+        <div class="page-header__container container">
+            <div class="page-header__breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">Home</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="">Breadcrumb</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="page-header__title">
+                <h1>My Account</h1>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-3 d-flex">
+                    {% include 'profiles/include/account-navigation.html' with active='account-profile' %}
+                </div>
+                <div class="col-12 col-lg-9 mt-4 mt-lg-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Edit Profile</h5>
+                        </div>
+                        <div class="card-divider"></div>
+                        <div class="card-body">
+                            <div class="row no-gutters">
+                                <div class="col-12 col-lg-7 col-xl-6">
+                                    <form method="post" action="{% url 'edit-profile' %}">
+                                        {% csrf_token %}
+
+                                        {% for field in form %}
+                                        <div class="form-group">
+                                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                             </br>
+                                            {{ field }}
+                                        </div>
+                                        {% endfor %}
+                                        <div class="form-group mt-5 mb-0">
+                                            <button class="btn btn-primary" type="submit">Save</button>
+                                        </div>
+                                    </form>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- footer -->
+{% block footer_link %}
+
+{% endblock footer_link %}

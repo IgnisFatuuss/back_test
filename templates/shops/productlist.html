@@ -18,10 +18,16 @@
             <h3 class="block-header__title">Featured Products</h3>
             <div class="block-header__divider"></div>
             <ul class="block-header__groups-list">
-                <li><button type="button" class="block-header__group  block-header__group--active ">All</button></li>
-                {%  for tag in view.get_tags %}
-                <li><button type="button" class="block-header__group ">{{ tag.name }}</button></li>
+                <li><a href="/">All</a></li>
+
+                {% for tag in view.get_tags %}
+                <li>
+                    <a href="{% url 'index' %}?tag_id={{ tag.id }}" class="" data-tag-id="{{ tag.id }}">
+                        {{ tag.name }}
+                    </a>
+                </li>
                 {% endfor %}
+
             </ul>
             <div class="block-header__arrows-list">
                 <button class="block-header__arrow block-header__arrow--left" type="button">
@@ -41,159 +47,162 @@
             <div class="block-products-carousel__preloader"></div>
             <div class="owl-carousel">
                 {% for product in products %}
-                <div class="block-products-carousel__column">
-                    <div class="block-products-carousel__cell">
-                        <div class="product-card product-card--hidden-actions ">
-                            <button class="product-card__quickview" type="button">
-                                <svg width="16px" height="16px">
-                                    <use xlink:href="images/sprite.svg#quickview-16"></use>
-                                </svg>
-                                <span class="fake-svg-icon"></span>
-                            </button>
-                            <div class="product-card__badges-list">
-                                <div class="product-card__badge product-card__badge--new">New</div>
-                            </div>
-                            <div class="product-card__image product-image">
-                                <a href="product/{{  product.slug }}/" class="product-image__body">
-                                    {% for image in images %}
-                                    <img src="{{ image.image.url }}" alt="{{ product.name }}">
-                                    {% endfor %}
+                    
+                    <div class="block-products-carousel__column action" data-tag-id="{% for tag in product.tag.all %}{{ tag.id }}{% endfor %}" >
+
+                                <div class="block-products-carousel__cell">
+                                    <div class="product-card product-card--hidden-actions ">
+                                        <button class="product-card__quickview" type="button">
+                                            <svg width="16px" height="16px">
+                                                <use xlink:href="images/sprite.svg#quickview-16"></use>
+                                            </svg>
+                                            <span class="fake-svg-icon"></span>
+                                        </button>
+                                        <div class="product-card__badges-list">
+                                            <div class="product-card__badge product-card__badge--new">New</div>
+                                        </div>
+                                        <div class="product-card__image product-image">
+                                            <a href="product/{{  product.slug }}/" class="product-image__body">
+                                                {% for image in product.variationproduct.first.gallereis.all|slice:1 %}
+                                                <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                                                {% endfor %}
+                                                
+                                            </a>
+                                        </div>
                                     
-                                </a>
-                            </div>
-                            <div class="product-card__info">
-                                <div class="product-card__name">
-                                    <a href="product/{{  product.slug }}/">{{ product.name }}</a>
-                                </div>
-                                <div class="product-card__rating">
-                                    <div class="product-card__rating-stars">
-                                        <div class="rating">
-                                            <div class="rating__body">
-                                                <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                                    <g class="rating__fill">
-                                                        <use xlink:href="images/sprite.svg#star-normal"></use>
-                                                    </g>
-                                                    <g class="rating__stroke">
-                                                        <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                                    </g>
-                                                </svg>
-                                                <div class="rating__star rating__star--only-edge rating__star--active">
-                                                    <div class="rating__fill">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                    <div class="rating__stroke">
-                                                        <div class="fake-svg-icon"></div>
+                                        <div class="product-card__info">
+                                            <div class="product-card__name">
+                                                <a href="product/{{  product.slug }}/">{{ product.name }} </a>
+                                            </div>
+                                            <div class="product-card__rating">
+                                                <div class="product-card__rating-stars">
+                                                    <div class="rating">
+                                                        <div class="rating__body">
+                                                            <svg class="rating__star rating__star--active" width="13px" height="12px">
+                                                                <g class="rating__fill">
+                                                                    <use xlink:href="images/sprite.svg#star-normal"></use>
+                                                                </g>
+                                                                <g class="rating__stroke">
+                                                                    <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
+                                                                </g>
+                                                            </svg>
+                                                            <div class="rating__star rating__star--only-edge rating__star--active">
+                                                                <div class="rating__fill">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                                <div class="rating__stroke">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                            </div>
+                                                            <svg class="rating__star rating__star--active" width="13px" height="12px">
+                                                                <g class="rating__fill">
+                                                                    <use xlink:href="images/sprite.svg#star-normal"></use>
+                                                                </g>
+                                                                <g class="rating__stroke">
+                                                                    <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
+                                                                </g>
+                                                            </svg>
+                                                            <div class="rating__star rating__star--only-edge rating__star--active">
+                                                                <div class="rating__fill">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                                <div class="rating__stroke">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                            </div>
+                                                            <svg class="rating__star rating__star--active" width="13px" height="12px">
+                                                                <g class="rating__fill">
+                                                                    <use xlink:href="images/sprite.svg#star-normal"></use>
+                                                                </g>
+                                                                <g class="rating__stroke">
+                                                                    <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
+                                                                </g>
+                                                            </svg>
+                                                            <div class="rating__star rating__star--only-edge rating__star--active">
+                                                                <div class="rating__fill">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                                <div class="rating__stroke">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                            </div>
+                                                            <svg class="rating__star rating__star--active" width="13px" height="12px">
+                                                                <g class="rating__fill">
+                                                                    <use xlink:href="images/sprite.svg#star-normal"></use>
+                                                                </g>
+                                                                <g class="rating__stroke">
+                                                                    <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
+                                                                </g>
+                                                            </svg>
+                                                            <div class="rating__star rating__star--only-edge rating__star--active">
+                                                                <div class="rating__fill">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                                <div class="rating__stroke">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                            </div>
+                                                            <svg class="rating__star " width="13px" height="12px">
+                                                                <g class="rating__fill">
+                                                                    <use xlink:href="images/sprite.svg#star-normal"></use>
+                                                                </g>
+                                                                <g class="rating__stroke">
+                                                                    <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
+                                                                </g>
+                                                            </svg>
+                                                            <div class="rating__star rating__star--only-edge ">
+                                                                <div class="rating__fill">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                                <div class="rating__stroke">
+                                                                    <div class="fake-svg-icon"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                                    <g class="rating__fill">
-                                                        <use xlink:href="images/sprite.svg#star-normal"></use>
-                                                    </g>
-                                                    <g class="rating__stroke">
-                                                        <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                                    </g>
-                                                </svg>
-                                                <div class="rating__star rating__star--only-edge rating__star--active">
-                                                    <div class="rating__fill">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                    <div class="rating__stroke">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                </div>
-                                                <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                                    <g class="rating__fill">
-                                                        <use xlink:href="images/sprite.svg#star-normal"></use>
-                                                    </g>
-                                                    <g class="rating__stroke">
-                                                        <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                                    </g>
-                                                </svg>
-                                                <div class="rating__star rating__star--only-edge rating__star--active">
-                                                    <div class="rating__fill">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                    <div class="rating__stroke">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                </div>
-                                                <svg class="rating__star rating__star--active" width="13px" height="12px">
-                                                    <g class="rating__fill">
-                                                        <use xlink:href="images/sprite.svg#star-normal"></use>
-                                                    </g>
-                                                    <g class="rating__stroke">
-                                                        <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                                    </g>
-                                                </svg>
-                                                <div class="rating__star rating__star--only-edge rating__star--active">
-                                                    <div class="rating__fill">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                    <div class="rating__stroke">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                </div>
-                                                <svg class="rating__star " width="13px" height="12px">
-                                                    <g class="rating__fill">
-                                                        <use xlink:href="images/sprite.svg#star-normal"></use>
-                                                    </g>
-                                                    <g class="rating__stroke">
-                                                        <use xlink:href="images/sprite.svg#star-normal-stroke"></use>
-                                                    </g>
-                                                </svg>
-                                                <div class="rating__star rating__star--only-edge ">
-                                                    <div class="rating__fill">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                    <div class="rating__stroke">
-                                                        <div class="fake-svg-icon"></div>
-                                                    </div>
-                                                </div>
+                                                <div class="product-card__rating-legend"> {{ product.reviews.all.count }} Reviews </div>
+                                            </div>
+                                            <ul class="product-card__features-list">
+                                                <li>Speed: 750 RPM</li>
+                                                <li>Power Source: Cordless-Electric</li>
+                                                <li>Battery Cell Type: Lithium</li>
+                                                <li>Voltage: 20 Volts</li>
+                                                <li>Battery Capacity: 2 Ah</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-card__actions">
+                                            <div class="product-card__availability">
+                                                Availability: <span class="text-success">In Stock</span>
+                                            </div>
+                                            {% for variation in product.variations.all %}
+                                            <div class="product-card__prices">
+                                                ${{ variation.price }}
+                                            </div>
+                                            {% endfor %}
+                                            <div class="product-card__buttons">
+                                                <button class="btn btn-primary product-card__addtocart" type="button">Add To Cart</button>
+                                                <button class="btn btn-secondary product-card__addtocart product-card__addtocart--list" type="button">Add To Cart</button>
+                                                <button class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button">
+                                                    <svg width="16px" height="16px">
+                                                        <use xlink:href="images/sprite.svg#wishlist-16"></use>
+                                                    </svg>
+                                                    <span class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+                                                </button>
+                                                <button class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__compare" type="button">
+                                                    <svg width="16px" height="16px">
+                                                        <use xlink:href="images/sprite.svg#compare-16"></use>
+                                                    </svg>
+                                                    <span class="fake-svg-icon fake-svg-icon--compare-16"></span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="product-card__rating-legend"> {{ product.reviews.all.count }} Reviews </div>
                                 </div>
-                                <ul class="product-card__features-list">
-                                    <li>Speed: 750 RPM</li>
-                                    <li>Power Source: Cordless-Electric</li>
-                                    <li>Battery Cell Type: Lithium</li>
-                                    <li>Voltage: 20 Volts</li>
-                                    <li>Battery Capacity: 2 Ah</li>
-                                </ul>
-                            </div>
-                            <div class="product-card__actions">
-                                <div class="product-card__availability">
-                                    Availability: <span class="text-success">In Stock</span>
-                                </div>
-                                {% for variation in product.variations.all %}
-                                <div class="product-card__prices">
-                                    ${{ variation.price }}
-                                </div>
-                                {% endfor %}
-                                <div class="product-card__buttons">
-                                    <button class="btn btn-primary product-card__addtocart" type="button">Add To Cart</button>
-                                    <button class="btn btn-secondary product-card__addtocart product-card__addtocart--list" type="button">Add To Cart</button>
-                                    <button class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button">
-                                        <svg width="16px" height="16px">
-                                            <use xlink:href="images/sprite.svg#wishlist-16"></use>
-                                        </svg>
-                                        <span class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
-                                    </button>
-                                    <button class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__compare" type="button">
-                                        <svg width="16px" height="16px">
-                                            <use xlink:href="images/sprite.svg#compare-16"></use>
-                                        </svg>
-                                        <span class="fake-svg-icon fake-svg-icon--compare-16"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
-                </div>
+
                 {% endfor %}
-     
-                
             </div>
         </div>
         
@@ -386,7 +395,9 @@
                         </div>
                         <div class="product-card__image product-image">
                             <a href="product/{{  product.slug }}/" class="product-image__body">
-                                <img class="product-image__img" src="images/products/product-2.jpg" alt="">
+                                {% for image in product.variationproduct.first.gallereis.all|slice:1 %}
+                                <img class="product-image__img" src="{{ image.image.url }}" alt="">
+                                {% endfor %}
                             </a>
                         </div>
                         <div class="product-card__info">
@@ -497,7 +508,7 @@
                                 Availability: <span class="text-success">In Stock</span>
                             </div>
                             <div class="product-card__prices">
-                                {% for variation in product.variations.all %}
+                                {% for variation in product.variationproduct.all %}
                                 <p>$ {{ variation.price }}</p>
                                 {% endfor %}
                             </div>
@@ -594,7 +605,7 @@
         <div class="block-products-carousel__slider">
             <div class="block-products-carousel__preloader"></div>
             <div class="owl-carousel">
-                {% for product in products %}
+                {% for product in products_new %}
                 <div class="block-products-carousel__column">
                     <div class="block-products-carousel__cell">
                         <div class="product-card product-card--hidden-actions ">
@@ -606,7 +617,9 @@
                             </button>
                             <div class="product-card__image product-image">
                                 <a href="product/{{  product.slug }}/" class="product-image__body">
-                                    <img class="product-image__img" src="images/products/product-15.jpg" alt="">
+                                    {% for image in product.variationproduct.first.gallereis.all|slice:1 %}
+                                    <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                                    {% endfor %}
                                 </a>
                             </div>
                             <div class="product-card__info">
@@ -715,7 +728,7 @@
                                     Availability: <span class="text-success">In Stock</span>
                                 </div>
                                 <div class="product-card__prices">
-                                    {% for variation in product.variations.all %}
+                                    {% for variation in product.variationproduct.all %}
                                     <p>$ {{ variation.price }}</p>
                                     {% endfor %}
                                 </div>
@@ -748,7 +761,9 @@
                             </button>
                             <div class="product-card__image product-image">
                                 <a href="product/{{  product.slug }}/" class="product-image__body">
-                                    <img class="product-image__img" src="images/products/product-16.jpg" alt="">
+                                    {% for image in product.variationproduct.first.gallereis.all|slice:1 %}
+                                    <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                                    {% endfor %}
                                 </a>
                             </div>
                             <div class="product-card__info">
@@ -857,7 +872,7 @@
                                     Availability: <span class="text-success">In Stock</span>
                                 </div>
                                 <div class="product-card__prices">
-                                    {% for variation in product.variations.all %}
+                                    {% for variation in product.variationproduct.all %}
                                     <p>$ {{ variation.price }}</p>
                                     {% endfor %}
                                 </div>
@@ -912,7 +927,9 @@
                 <div class="post-card  ">
                     <div class="post-card__image">
                         <a href="">
-                            <img src="images/posts/post-1.jpg" alt="">
+                            {% for image in product.variationproduct.first.gallereis.all|slice:1 %}
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                            {% endfor %}
                         </a>
                     </div>
                     <div class="post-card__info">
@@ -924,7 +941,7 @@
                         </div>
                         <div class="post-card__date">October 19, 2019</div>
                         <div class="post-card__content">
-                            {{ product.description }}
+                            {{ product.description|safe }}
                         </div>
                         <div class="post-card__read-more">
                             <a href="" class="btn btn-secondary btn-sm">Read More</a>
@@ -941,10 +958,10 @@
     <div class="container">
         <div class="block-brands__slider">
             <div class="owl-carousel">
-                {% for brand in brands %}
+                {% for b in brands %}
                 <div class="block-brands__item">
-                    <a href=""><img src="{{ brand.logo.url }}" alt=""></a>
-                    <p>  brand name: {{brand.name}} </p>
+                    <a href=""><img src="{{ b.logo.url }}" alt=""></a>
+                    <p>  brand name: {{b.name}} </p>
                 </div>
                 {% endfor %}
             </div>

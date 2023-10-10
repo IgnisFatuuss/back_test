@@ -1,6 +1,7 @@
 (function ($) {
     "use strict";
-
+    const min = parseFloat("{{ min_price_variation }}"); // Получаем min из Django
+    const max = parseFloat("{{ max_price_variation }}"); 
     let passiveSupported = false;
 
     try {
@@ -27,6 +28,24 @@
         return direction() === 'rtl';
     }
 
+    function filterProducts(button) {
+        const tagSlug = button.getAttribute("data-tag");
+        const url = button.getAttribute("data-url");
+    
+        // Отправляем AJAX-запрос на сервер для фильтрации товаров по выбранному тегу
+        $.ajax({
+            url: url,
+            method: "GET",
+            data: { tag: tagSlug }, // Передаем выбранный тег как параметр
+            success: function (data) {
+                // Обработка успешного ответа от сервера
+                // Здесь вы можете обновить список товаров на странице на основе полученных данных
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
     /*
     // initialize custom numbers
     */
@@ -47,7 +66,8 @@
 
                 const tab = $(this);
                 const pane = $('.product-tabs__pane' + $(this).attr('href'), element);
-
+                
+                
                 if ($(element).is('.product-tabs--stuck')) {
                     window.scrollTo(0, $(element).find('.product-tabs__content').offset().top - $(element).find('.product-tabs__list-body').outerHeight() + 2);
                 }
@@ -310,6 +330,7 @@
     $(function() {
         $('.block-products-carousel').each(function() {
             const layout = $(this).data('layout');
+            
             const options = {
                 items: 4,
                 margin: 14,
@@ -378,58 +399,31 @@
             }
 
             owl.owlCarousel(owlOptions);
-
+            // console.log($(this).data('tag-id'))
+            // console.log(tagId)
             $(this).find('.block-header__group').on('click', function(event) {
-                const block = $(this).closest('.block-products-carousel');
-
                 event.preventDefault();
-
-                if ($(this).is('.block-header__group--active')) {
-                    return;
-                }
-
+            
+                const tagId = $(this).data('tag-id'); // Получаем ID тега из data-атрибута
+            
                 cancelPreviousTabChange();
-
-                block.addClass('block-products-carousel--loading');
-                $(this).closest('.block-header__groups-list').find('.block-header__group--active').removeClass('block-header__group--active');
+            
+                // Снимаем выделение с предыдущего активного элемента
+                const prevActiveGroup = $(this).closest('.block-header__groups-list').find('.block-header__group--active');
+                prevActiveGroup.removeClass('block-header__group--active');
+            
+                // Добавляем класс "block-header__group--active" к текущему элементу
                 $(this).addClass('block-header__group--active');
-
-                // timeout ONLY_FOR_DEMO! you can replace it with an ajax request
-                let timer;
-                timer = setTimeout(function() {
-                    let items = block.find('.owl-carousel .owl-item:not(".cloned") .block-products-carousel__column');
-
-                    /*** this is ONLY_FOR_DEMO! / start */
-                    /**/ const itemsArray = items.get();
-                    /**/ const newItemsArray = [];
-                    /**/
-                    /**/ while (itemsArray.length > 0) {
-                    /**/     const randomIndex = Math.floor(Math.random() * itemsArray.length);
-                    /**/     const randomItem = itemsArray.splice(randomIndex, 1)[0];
-                    /**/
-                    /**/     newItemsArray.push(randomItem);
-                    /**/ }
-                    /**/ items = $(newItemsArray);
-                    /*** this is ONLY_FOR_DEMO! / end */
-
-                    block.find('.owl-carousel')
-                        .trigger('replace.owl.carousel', [items])
-                        .trigger('refresh.owl.carousel')
-                        .trigger('to.owl.carousel', [0, 0]);
-
-                    $('.product-card__quickview', block).on('click', function() {
-                        quickview.clickHandler.apply(this, arguments);
-                    });
-
-                    block.removeClass('block-products-carousel--loading');
-                }, 1000);
-                cancelPreviousTabChange = function() {
-                    // timeout ONLY_FOR_DEMO!
-                    clearTimeout(timer);
-                    cancelPreviousTabChange = function() {};
-                };
+            
+                // Скрываем все продукты
+                $('.block-products-carousel__column.action').each(function() {
+                    if ($(this).data('tag-id') == tagId) {
+                        $(this).css('visibility', 'visible');
+                    } else {
+                        $(this).remove();
+                    }
+                });
             });
-
             $(this).find('.block-header__arrow--left').on('click', function() {
                 owl.trigger('prev.owl.carousel', [500]);
             });
@@ -649,6 +643,8 @@
     });
 
 
+    
+
     /*
     // collapse
     */
@@ -697,35 +693,103 @@
     /*
     // price filter
     */
+
     $(function () {
+        // Выполнить AJAX-запрос
+        
         $('.filter-price').each(function (i, element) {
-            const min = $(element).data('min');
-            const max = $(element).data('max');
-            const from = $(element).data('from');
-            const to = $(element).data('to');
             const slider = element.querySelector('.filter-price__slider');
+    
+            // Выполнить AJAX-запрос
+            $.ajax({
+                url: '/get_price_variations/',  // Замените на URL вашего представления Django
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    
+                    // Установите значения min и max из AJAX-ответа
+                    const min = data.min_price
+                    const max = data.max_price
 
-            noUiSlider.create(slider, {
-                start: [from, to],
-                connect: true,
-                direction: isRTL() ? 'rtl' : 'ltr',
-                range: {
-                    'min': min,
-                    'max': max
+    
+                    // Получите значения from и to из элемента .filter-price__slider
+                    const slider = element.querySelector('.filter-price__slider');
+                    const from = $(slider).data('from');
+                    const to = $(slider).data('to');
+                    
+                    // Создайте слайдер с обновленными значениями
+                    noUiSlider.create(slider, {
+                        start: [from, to],
+                        connect: true,
+                        direction: isRTL() ? 'rtl' : 'ltr',
+                        range: {
+                            'min': min,
+                            'max': max
+                        }
+                    });
+    
+                    const titleValues = [
+                        $(element).find('.filter-price__min-value')[0],
+                        $(element).find('.filter-price__max-value')[0]
+                    ];
+                    function sendPriceFilterValues(min, max) {
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    // Разбиваем куки на имя и значение
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+                        
+                        const csrfToken = getCookie('csrftoken');
+                        var currentSlug = window.location.pathname.split('/').slice(-2, -1)[0];
+                        $.ajax({
+                            url: '/categories/' + currentSlug + '/', 
+                            method: 'POST', 
+                            dataType: 'json',
+                            data: {
+                                'min_price': min,
+                                'max_price': max,
+                                'csrfmiddlewaretoken': csrfToken 
+                            },
+                            success: function (data) {
+
+                            },
+                            error: function () {
+                                console.log('Ошибка при выполнении AJAX-запроса.');
+                            }
+                        });
+                    }
+                    slider.noUiSlider.on('change', function (values, handle) {
+                        const min = parseFloat(values[0]); 
+                        console.log(min);
+                        const max = parseFloat(values[1]); 
+                        sendPriceFilterValues(min, max); 
+                    });
+                    
+                    slider.noUiSlider.on('update', function (values, handle) {
+                        titleValues[handle].innerHTML = values[handle];
+
+
+                    });
+                    
+                    
+                },
+                error: function () {
+                    console.log('Ошибка при выполнении AJAX-запроса.');
                 }
-            });
-
-            const titleValues = [
-                $(element).find('.filter-price__min-value')[0],
-                $(element).find('.filter-price__max-value')[0]
-            ];
-
-            slider.noUiSlider.on('update', function (values, handle) {
-                titleValues[handle].innerHTML = values[handle];
             });
         });
     });
-
+    
 
     /*
     // mobilemenu
@@ -850,6 +914,8 @@
             item.find('~ .block-finder__form-item .block-finder__select').trigger('change.select2');
         });
     });
+
+
 
     /*
     // select2

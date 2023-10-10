@@ -11,3 +11,4 @@ class ProfileAdmin(admin.ModelAdmin):
     inlines = [HistoriesInline]
 
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Adress)

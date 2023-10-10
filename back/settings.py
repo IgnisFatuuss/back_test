@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "website.apps.WebsiteConfig",
     "ckeditor",
     "ckeditor_uploader",
+    "crispy_forms",
+    "allauth",
+    "allauth.account"
 ]
 
 MIDDLEWARE = [
@@ -58,7 +61,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware"
+    "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "back.urls"
@@ -92,6 +96,10 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -123,6 +131,11 @@ USE_I18N = True
 
 USE_TZ = True
 
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+LOGIN_REDIRECT_URL = "/"
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -208,3 +221,9 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+CRISPY_TEMPLATE_PACK = 'vendor/bootstrap'
+
+# LOGIN_URL = '/login/'
+
+# AUTH_USER_MODEL = 'Profile.User'

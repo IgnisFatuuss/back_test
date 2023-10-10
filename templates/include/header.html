@@ -72,7 +72,7 @@
                             </a>
                         </div>
                         <div class="indicator indicator--mobile">
-                            <a href="cart.html" class="indicator__button">
+                            <a href="{% url 'cart' %}" class="indicator__button">
                                 <span class="indicator__area">
                                     <svg width="20px" height="20px">
                                         <use xlink:href="images/sprite.svg#cart-20"></use>
@@ -96,10 +96,10 @@
             <div class="topbar__container container">
                 <div class="topbar__row">
                     <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="about-us.html">About Us</a>
+                        <a class="topbar-link" href="about-us/">About Us</a>
                     </div>
                     <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="contact-us.html">Contacts</a>
+                        <a class="topbar-link" href="contact-us/">Contacts</a>
                     </div>
                     <div class="topbar__item topbar__item--link">
                         <a class="topbar-link" href="">Store Location</a>
@@ -108,7 +108,7 @@
                         <a class="topbar-link" href="track-order.html">Track Order</a>
                     </div>
                     <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="blog-classic.html">Blog</a>
+                        <a class="topbar-link" href="blogs/">Blog</a>
                     </div>
                     <div class="topbar__spring"></div>
                     <div class="topbar__item">
@@ -134,7 +134,7 @@
                                         <li class="menu__item">
                                             <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                             <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="account-profile.html">
+                                            <a class="menu__item-link" href="{% url 'account-profile' %}">
                                                 Edit Profile
                                             </a>
                                         </li>
@@ -162,7 +162,7 @@
                                         <li class="menu__item">
                                             <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                             <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="account-login.html">
+                                            <a class="menu__item-link" href="{% url 'account_logout' %}">
                                                 Logout
                                             </a>
                                         </li>
@@ -297,6 +297,16 @@
                     <div class="search__body">
                         <form class="search__form" action="">
                             <select class="search__categories" aria-label="Category">
+                                {% for category in categories %}
+                                    {% if not category.parent %}
+                                        <option>{{ category.name }}</option>
+                                        {% if category.child.count >= 1 %}
+                                            {% for subcategory in category.child.all %}
+                                            <option>&nbsp;&nbsp;&nbsp;&nbsp;{{ subcategory.name }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
                                 <option value="all">All Categories</option>
                                 <option>Instruments</option>
                                 <option>&nbsp;&nbsp;&nbsp;&nbsp;Power Tools</option>
@@ -483,7 +493,7 @@
                                     </div>
                                 </li>
                                 <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="shop-grid-3-columns-sidebar.html">
+                                    <a class="nav-links__item-link" href="/shop">
                                         <div class="nav-links__item-body">
                                             Shop
                                             <svg class="nav-links__item-arrow" width="9px" height="6px">
@@ -499,7 +509,7 @@
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="shop-grid-3-columns-sidebar.html">
+                                                    <a class="menu__item-link" href="/shop">
                                                         Shop Grid
                                                         <svg class="menu__item-arrow" width="6px" height="9px">
                                                             <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
@@ -513,7 +523,7 @@
                                                                 <li class="menu__item">
                                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                                     <div class="menu__item-submenu-offset"></div>
-                                                                    <a class="menu__item-link" href="shop-grid-3-columns-sidebar.html">
+                                                                    <a class="menu__item-link" href="shop/">
                                                                         3 Columns Sidebar
                                                                     </a>
                                                                 </li>
@@ -593,7 +603,7 @@
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="cart.html">
+                                                    <a class="menu__item-link" href="{% url 'cart' %}">
                                                         Cart
                                                     </a>
                                                 </li>
@@ -607,7 +617,7 @@
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="checkout.html">
+                                                    <a class="menu__item-link" href="{% url 'checkout' %}">
                                                         Checkout
                                                     </a>
                                                 </li>
@@ -645,7 +655,7 @@
                                     </div>
                                 </li>
                                 <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="account-login.html">
+                                    <a class="nav-links__item-link" href="">
                                         <div class="nav-links__item-body">
                                             Account
                                             <svg class="nav-links__item-arrow" width="9px" height="6px">
@@ -661,21 +671,21 @@
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="account-login.html">
+                                                    <a class="menu__item-link" href="{% url 'account_login' %}">
                                                         Login
                                                     </a>
                                                 </li>
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="account-dashboard.html">
+                                                    <a class="menu__item-link" href="{% url 'dashboard' %}">
                                                         Dashboard
                                                     </a>
                                                 </li>
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="account-profile.html">
+                                                    <a class="menu__item-link" href="{% url 'account-profile' %}">
                                                         Edit Profile
                                                     </a>
                                                 </li>
@@ -696,14 +706,14 @@
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="account-addresses.html">
+                                                    <a class="menu__item-link" href="{% url 'addresses-view' %}">
                                                         Address Book
                                                     </a>
                                                 </li>
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="account-edit-address.html">
+                                                    <a class="menu__item-link" href="{% url 'edit-address-view' %}">
                                                         Edit Address
                                                     </a>
                                                 </li>
@@ -720,7 +730,7 @@
                                     </div>
                                 </li>
                                 <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="blog-classic.html">
+                                    <a class="nav-links__item-link" href="/blogs">
                                         <div class="nav-links__item-body">
                                             Blog
                                             <svg class="nav-links__item-arrow" width="9px" height="6px">
@@ -804,7 +814,7 @@
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="contact-us.html">
+                                                    <a class="menu__item-link" href="/contact-us/">
                                                         Contact Us
                                                     </a>
                                                 </li>
@@ -818,35 +828,35 @@
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="404.html">
+                                                    <a class="menu__item-link" href="/404/">
                                                         404
                                                     </a>
                                                 </li>
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="terms-and-conditions.html">
+                                                    <a class="menu__item-link" href="/terms-and-conditions/">
                                                         Terms And Conditions
                                                     </a>
                                                 </li>
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="faq.html">
+                                                    <a class="menu__item-link" href="/faq/">
                                                         FAQ
                                                     </a>
                                                 </li>
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="components.html">
+                                                    <a class="menu__item-link" href="/components/">
                                                         Components
                                                     </a>
                                                 </li>
                                                 <li class="menu__item">
                                                     <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
                                                     <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="typography.html">
+                                                    <a class="menu__item-link" href="/typography/">
                                                         Typography
                                                     </a>
                                                 </li>
@@ -1025,14 +1035,14 @@
                                         </a>
                                         <div class="account-menu__divider"></div>
                                         <ul class="account-menu__links">
-                                            <li><a href="account-profile.html">Edit Profile</a></li>
+                                            <li><a href="{% url 'account-profile' %}">Edit Profile</a></li>
                                             <li><a href="account-orders.html">Order History</a></li>
                                             <li><a href="account-addresses.html">Addresses</a></li>
                                             <li><a href="account-password.html">Password</a></li>
                                         </ul>
                                         <div class="account-menu__divider"></div>
                                         <ul class="account-menu__links">
-                                            <li><a href="account-login.html">Logout</a></li>
+                                            <li><a href="{% url 'account_logout' %}">Logout</a></li>
                                         </ul>
                                     </div>
                                 </div>

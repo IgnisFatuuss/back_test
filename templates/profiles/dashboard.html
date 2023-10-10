@@ -1,0 +1,135 @@
+{% extends 'include/base.html' %}
+
+{%load static%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock head %}
+
+<!-- content -->
+{% block content %}
+<div class="site__body">
+    <div class="page-header">
+        <div class="page-header__container container">
+            <div class="page-header__breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">Home</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="">Breadcrumb</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="page-header__title">
+                <h1>My Account</h1>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-3 d-flex">
+                    {% include 'profiles/include/account-navigation.html' with active='dashboard' %}
+                </div>
+                <div class="col-12 col-lg-9 mt-4 mt-lg-0">
+                    
+                    <div class="dashboard">
+                        <div class="dashboard__profile card profile-card">
+                            <div class="card-body profile-card__body">
+                                <div class="profile-card__avatar">
+                                    <img src="{{ profile.avatar.url }}" alt="">
+                                </div>
+                                <div class="profile-card__name">{{ profile.default_address.first_name }} {{ profile.default_address.last_name}}</div>
+                                <div class="profile-card__email">{{ profile.default_address.email }}</div>
+                                <div class="profile-card__edit">
+                                    <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm">Edit Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard__address card address-card address-card--featured">
+                            <div class="address-card__badge">Default Address</div>
+                            <div class="address-card__body">
+                                <div class="address-card__name">{{ profile.default_address.first_name }} {{ profile.default_address.last_name}}</div>
+                                <div class="address-card__row">
+                                    {{ profile.default_address.country }}<br>
+                                    {{ profile.default_address.postcode }}, {{ profile.default_address.city }}<br>
+                                    {{ profile.default_address.street }}, {{ profile.default_address.appartament }}
+                                </div>
+                                <div class="address-card__row">
+                                    <div class="address-card__row-title">Phone Number</div>
+                                    <div class="address-card__row-content">{{ profile.default_address.phone }}</div>
+                                </div>
+                                <div class="address-card__row">
+                                    <div class="address-card__row-title">Email Address</div>
+                                    <div class="address-card__row-content">{{ profile.default_address.email }}</div>
+                                </div>
+                                <div class="address-card__footer">
+                                    <a href="{% url 'edit-address-view' slug=profile.default_address.pk %}">Edit Address</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard__orders card">
+                            <div class="card-header">
+                                <h5>Recent Orders</h5>
+                            </div>
+                            <div class="card-divider"></div>
+                            <div class="card-table">
+                                <div class="table-responsive-sm">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Order</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><a href="">#8132</a></td>
+                                                <td>02 April, 2019</td>
+                                                <td>Pending</td>
+                                                <td>$2,719.00 for 5 item(s)</td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="">#7592</a></td>
+                                                <td>28 March, 2019</td>
+                                                <td>Pending</td>
+                                                <td>$374.00 for 3 item(s)</td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="">#7192</a></td>
+                                                <td>15 March, 2019</td>
+                                                <td>Shipped</td>
+                                                <td>$791.00 for 4 item(s)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- footer -->
+{% block footer_link %}
+
+{% endblock footer_link %}

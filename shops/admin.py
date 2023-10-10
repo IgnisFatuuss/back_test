@@ -2,13 +2,17 @@ from django.contrib import admin
 from .models import *
 from ckeditor_uploader.widgets import CKEditorUploadingWidget 
 from django import forms
-from nested_admin import NestedTabularInline
+from nested_admin import NestedTabularInline, NestedModelAdmin
 
 
+class GallereisInline(NestedTabularInline):
+    model = Gallereis
+    extra = 1
 
-class VariationsInline(NestedTabularInline):
-    model = Variations
-    extra = 3
+class VariationsProductInline(NestedTabularInline):
+    model = VariationProducts
+    inlines = [GallereisInline]
+    extra = 1
 
 class AttributsInline(admin.TabularInline):
     model = Attributs
@@ -26,10 +30,6 @@ class EmotionsInline(NestedTabularInline):
     model = Emotions
     extra = 1
 
-class GallereisInline(NestedTabularInline):
-    model = Gallereis
-    extra = 1
-
 
 class ProductsAdminForm(forms.ModelForm):
     description = forms.CharField(label='Описание',widget=CKEditorUploadingWidget())
@@ -38,10 +38,10 @@ class ProductsAdminForm(forms.ModelForm):
         fields = '__all__'
 
 @admin.register(Products)
-class ProductsAdmin(admin.ModelAdmin):
+class ProductsAdmin(NestedModelAdmin):
     prepopulated_fields = {'slug': ('name',),}
     form = ProductsAdminForm
-    inlines = [VariationsInline, FaqsInline, ReviewsInline, EmotionsInline]
+    inlines = [VariationsProductInline, FaqsInline, ReviewsInline, EmotionsInline]
 
 @admin.register(Categories)
 class CategoriesAdmin(admin.ModelAdmin):
@@ -50,6 +50,7 @@ class CategoriesAdmin(admin.ModelAdmin):
 @admin.register(Tags)
 class TagsAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',),}
+    list_display = ['name', 'id']
 
 @admin.register(Brands)
 class BrandsAdmin(admin.ModelAdmin):
@@ -57,13 +58,18 @@ class BrandsAdmin(admin.ModelAdmin):
 
 @admin.register(Variations)
 class VariationsAdmin(admin.ModelAdmin):
-    inlines = [AttributsInline, GallereisInline]
+    inlines = [AttributsInline,]
 
-
+# @admin.register(VariationProducts)
+# class VariationProductAdmin(admin.ModelAdmin):
+#     inlines = [GallereisInline,]
+admin.site.register(Carts)
+admin.site.register(CartProduct)
 admin.site.register(Orders)
-admin.site.register(Cards)
+
 admin.site.register(Faqs)
 admin.site.register(Reviews)
 admin.site.register(Emotions)
+# admin.site.register(Gallereis)
 
 
