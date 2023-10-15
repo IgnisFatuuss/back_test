@@ -53,7 +53,7 @@
                         {% for address in addresses %}
                         <div class="addresses-list__divider"></div>
                                 <div class="addresses-list__item card address-card">
-                                    {% if address.profile_set.count == 1 %}
+                                    {% if address.default == True %}
                                     <div class="address-card__badge">Default</div>
                                     {% endif %}
                                     <div class="address-card__body">

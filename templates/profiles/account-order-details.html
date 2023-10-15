@@ -1,0 +1,133 @@
+{% extends 'include/base.html' %}
+
+{%load static%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock head %}
+
+<!-- content -->
+{% block content %}
+<div class="site__body">
+    <div class="page-header">
+        <div class="page-header__container container">
+            <div class="page-header__breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">Home</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="">Breadcrumb</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="page-header__title">
+                <h1>My Account</h1>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-3 d-flex">
+                    {% include 'profiles/include/account-navigation.html' with active='order-details' %}
+                </div>
+                <div class="col-12 col-lg-9 mt-4 mt-lg-0">
+                    <div class="card">
+                        <div class="order-header">
+                            <div class="order-header__actions">
+                                <a href="{% url 'orders-view'%}" class="btn btn-xs btn-secondary">Обратно к списку</a>
+                            </div>
+                            <h5 class="order-header__title">Заказ №{{ order.id }}</h5>
+                            <div class="order-header__subtitle">
+                                Был создан <mark class="order-header__date">{{ order.date }}</mark>
+                                и сейчас <mark class="order-header__status">{{ order.status }}</mark>.
+                            </div>
+                        </div>
+                        <div class="card-divider"></div>
+                        <div class="card-table">
+                            <div class="table-responsive-sm">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Продукты</th>
+                                            <th>Всего</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="card-table__body card-table__body--merge-rows">
+                                        {% for product in cartproducts %}
+                                        <tr>
+                                            <td>{{ product.product.name }} × {{ product.qty }}</td>
+                                            <td>${{ product.final_price }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tbody class="card-table__body card-table__body--merge-rows">
+                                        <tr>
+                                            <th>Subtotal</th>
+                                            <td>$5,877.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Store Credit</th>
+                                            <td>$-20.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipping</th>
+                                            <td>$25.00</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td>$5,882.00</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 no-gutters mx-n2">
+                        <div class="col-sm-6 col-12 px-2">
+                            <div class="card address-card address-card--featured">
+                                <div class="address-card__body">
+                                    <div class="address-card__badge address-card__badge--muted">Адрес доставки</div>
+                                    <div class="address-card__name">{{ order.address.first_name }} {{ order.address.last_name }}</div>
+                                    <div class="address-card__row">
+                                        {{ order.address.country }}<br>
+                                        {{ order.address.postcode }}, {{ order.address.city }}<br>
+                                        {{ order.address.street }}, {{ order.address.appartament }}
+                                    </div>
+                                    <div class="address-card__row">
+                                        <div class="address-card__row-title">Номер телефона</div>
+                                        <div class="address-card__row-content">{{ order.address.phone }}</div>
+                                    </div>
+                                    <div class="address-card__row">
+                                        <div class="address-card__row-title">Email Address</div>
+                                        <div class="address-card__row-content">{{ order.address.email }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- footer -->
+{% block footer_link %}
+
+{% endblock footer_link %}

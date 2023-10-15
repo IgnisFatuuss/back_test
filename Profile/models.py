@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from shops.models import Products
+# from shops.models import Products
 from django.urls import reverse
 
 # Create your models here.
@@ -19,7 +19,6 @@ class Profile(models.Model):
     city = models.CharField(max_length=100, blank=True, verbose_name='Город')
     zip_code = models.CharField(max_length=100, blank=True, verbose_name='Почтовый индекс')
     phone = models.CharField(blank=True, verbose_name='Телефон', max_length=150)
-    default_address = models.ForeignKey('Adress', on_delete=models.CASCADE, verbose_name= 'Стандартный адрес', blank=True, null=True, default=None)
 
     def str(self):
         return self.user.username
@@ -45,6 +44,7 @@ class Adress(models.Model):
     appartament = models.CharField(max_length=255, blank=True, verbose_name='Апартаменты')
     email = models.CharField(max_length=255, verbose_name='email')
     phone = models.CharField(max_length=255, verbose_name='Телефон')
+    default = models.BooleanField(default=False, null=True, blank=False)
 
     class Meta:
         verbose_name = 'Адрес'
@@ -53,7 +53,6 @@ class Adress(models.Model):
 class Histories(models.Model):
     profile= models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name= 'Профиль')
     url = models.URLField(verbose_name='Ссылка')
-    product = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Продукт')
 
     class Meta:
         verbose_name = 'История'

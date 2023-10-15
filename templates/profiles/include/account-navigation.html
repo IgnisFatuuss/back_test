@@ -7,11 +7,11 @@
         <li class="account-nav__item {% if active == 'account-profile' %} account-nav__item--active {% endif %}">
             <a href="{% url 'account-profile' %}">Edit Profile</a>
         </li>
-        <li class="account-nav__item {% if active == 'oder-history' %} account-nav__item--active {% endif %}">
-            <a href="account-orders.html">Order History</a>
+        <li class="account-nav__item {% if active == 'order-history' %} account-nav__item--active {% endif %}">
+            <a href="{% url 'orders-view' %}">Order History</a>
         </li>
-        <li class="account-nav__item {% if active == 'order-details' %} account-nav__item--active {% endif %}">
-            <a href="account-order-details.html">Order Details</a>
+        <!-- <li class="account-nav__item {% if active == 'order-details' %} account-nav__item--active {% endif %}">
+            <a href="">Order Details</a> -->
         </li>
         <li class="account-nav__item {% if active == 'account-addresses' %} account-nav__item--active {% endif %}">
             <a href="{% url 'addresses-view' %}">Addresses</a>

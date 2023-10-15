@@ -12,5 +12,7 @@ urlpatterns = [
     path('addressview/', views.AddressView.as_view(), name='addresses-view'),
     path('removeaddress/<slug:slug>/', views.RemoveAddress.as_view(), name='remove-address'), 
     path('makedefault/<slug:slug>/', views.MakeDefalut.as_view(), name='make-defalut'),
-    path('dashboard', views.DashboardView.as_view(), name='dashboard')
+    path('dashboard', views.DashboardView.as_view(), name='dashboard'),
+    path('account-orders', views.OrdersView.as_view(), name='orders-view'),
+    path('order-details/<slug:slug>/', views.OrderDetails.as_view(), name='order-details'), 
 ]

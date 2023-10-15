@@ -66,7 +66,7 @@ class VariationsAdmin(admin.ModelAdmin):
 admin.site.register(Carts)
 admin.site.register(CartProduct)
 admin.site.register(Orders)
-
+admin.site.register(WishList)
 admin.site.register(Faqs)
 admin.site.register(Reviews)
 admin.site.register(Emotions)

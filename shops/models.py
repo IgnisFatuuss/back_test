@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from Profile.models import Adress
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -101,17 +102,18 @@ class Orders(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
     STATUS = [(1, 'Не оплачено'), (2, 'Оплачено'),]
     status = models.PositiveIntegerField(default=1, choices=STATUS, blank=True, null=True, verbose_name='Статус')
-    first_name = models.CharField(max_length=255, verbose_name='Имя')
-    last_name = models.CharField(max_length=255, verbose_name='Фамилия')
-    company_name = models.CharField(max_length=255, blank=True, verbose_name='Имя компании')
-    countries = [(1, 'Russia'), (2, 'USA'),]
-    country = models.PositiveIntegerField(choices=countries, verbose_name='Страна')
-    city = models.CharField(max_length=255, verbose_name='Город')
-    street = models.CharField(max_length=255, verbose_name='Улица')
-    postcode = models.CharField(max_length=255, verbose_name='Почтовый код')
-    appartament = models.CharField(max_length=255, blank=True, verbose_name='Апартаменты')
-    email = models.CharField(max_length=255, verbose_name='email')
-    phone = models.CharField(max_length=255, verbose_name='Телефон')
+    # first_name = models.CharField(max_length=255, verbose_name='Имя')
+    # last_name = models.CharField(max_length=255, verbose_name='Фамилия')
+    # company_name = models.CharField(max_length=255, blank=True, verbose_name='Имя компании')
+    # countries = [(1, 'Russia'), (2, 'USA'),]
+    # country = models.PositiveIntegerField(choices=countries, verbose_name='Страна')
+    # city = models.CharField(max_length=255, verbose_name='Город')
+    # street = models.CharField(max_length=255, verbose_name='Улица')
+    # postcode = models.CharField(max_length=255, verbose_name='Почтовый код')
+    # appartament = models.CharField(max_length=255, blank=True, verbose_name='Апартаменты')
+    # email = models.CharField(max_length=255, verbose_name='email')
+    # phone = models.CharField(max_length=255, verbose_name='Телефон')
+    address = models.ForeignKey(Adress, on_delete=models.CASCADE, verbose_name='Адрес', default=False, related_name='address')
     order_sum = models.PositiveIntegerField(verbose_name='Общая сумма')
     date = models.DateField(auto_now=True, verbose_name='Дата')
     notes = models.CharField(max_length=255, blank=True, verbose_name='Примечания')
@@ -206,3 +208,12 @@ class Carts(models.Model):
     class Meta:
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'
+
+class WishList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
+    product = models.ManyToManyField(Products, blank=True, verbose_name='Продукт')
+
+
+    class Meta:
+        verbose_name = 'Список избранных товаров'
+        verbose_name_plural = 'Список избранных товаров'

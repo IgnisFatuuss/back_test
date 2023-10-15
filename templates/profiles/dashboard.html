@@ -51,32 +51,32 @@
                                 <div class="profile-card__avatar">
                                     <img src="{{ profile.avatar.url }}" alt="">
                                 </div>
-                                <div class="profile-card__name">{{ profile.default_address.first_name }} {{ profile.default_address.last_name}}</div>
-                                <div class="profile-card__email">{{ profile.default_address.email }}</div>
+                                <div class="profile-card__name">{{ default_address.first_name }} {{ default_address.last_name}}</div>
+                                <div class="profile-card__email">{{ default_address.email }}</div>
                                 <div class="profile-card__edit">
                                     <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm">Edit Profile</a>
                                 </div>
                             </div>
                         </div>
                         <div class="dashboard__address card address-card address-card--featured">
-                            <div class="address-card__badge">Default Address</div>
+                            <div class="address-card__badge">Основной адрес</div>
                             <div class="address-card__body">
-                                <div class="address-card__name">{{ profile.default_address.first_name }} {{ profile.default_address.last_name}}</div>
+                                <div class="address-card__name">{{ default_address.first_name }} {{ default_address.last_name}}</div>
                                 <div class="address-card__row">
-                                    {{ profile.default_address.country }}<br>
-                                    {{ profile.default_address.postcode }}, {{ profile.default_address.city }}<br>
-                                    {{ profile.default_address.street }}, {{ profile.default_address.appartament }}
+                                    {{ default_address.country }}<br>
+                                    {{ default_address.postcode }}, {{ default_address.city }}<br>
+                                    {{ default_address.street }}, {{ default_address.appartament }}
                                 </div>
                                 <div class="address-card__row">
                                     <div class="address-card__row-title">Phone Number</div>
-                                    <div class="address-card__row-content">{{ profile.default_address.phone }}</div>
+                                    <div class="address-card__row-content">{{ default_address.phone }}</div>
                                 </div>
                                 <div class="address-card__row">
                                     <div class="address-card__row-title">Email Address</div>
-                                    <div class="address-card__row-content">{{ profile.default_address.email }}</div>
+                                    <div class="address-card__row-content">{{ default_address.email }}</div>
                                 </div>
                                 <div class="address-card__footer">
-                                    <a href="{% url 'edit-address-view' slug=profile.default_address.pk %}">Edit Address</a>
+                                    <a href="{% url 'edit-address-view' slug=default_address.pk %}">Изменить адрес</a>
                                 </div>
                             </div>
                         </div>
@@ -91,31 +91,21 @@
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>Order</th>
-                                                <th>Date</th>
-                                                <th>Status</th>
-                                                <th>Total</th>
+                                                <th>Заказ</th>
+                                                <th>Статус</th>
+                                                <th>Всего</th>
+                                                <th>Дата</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% for order in orders|slice:3 %}
                                             <tr>
-                                                <td><a href="">#8132</a></td>
-                                                <td>02 April, 2019</td>
+                                                <td><a href="{% url 'order-details' slug=order.id %}">№{{ order.id }}</a></td>
                                                 <td>Pending</td>
-                                                <td>$2,719.00 for 5 item(s)</td>
+                                                <td>${{order.order_sum}} за {{order.cart.total_products}} товар(а)</td>
+                                                <td>{{ order.date }}</td>
                                             </tr>
-                                            <tr>
-                                                <td><a href="">#7592</a></td>
-                                                <td>28 March, 2019</td>
-                                                <td>Pending</td>
-                                                <td>$374.00 for 3 item(s)</td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="">#7192</a></td>
-                                                <td>15 March, 2019</td>
-                                                <td>Shipped</td>
-                                                <td>$791.00 for 4 item(s)</td>
-                                            </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

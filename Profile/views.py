@@ -1,7 +1,10 @@
 # from django.contrib.auth.mixins import LoginRequiredMixin
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.generic import ListView, DetailView, TemplateView, View
 from .models import *
+from shops.models import *
 from .forms import *
 from django.db import transaction
 # from .models import Pages, User
@@ -99,21 +102,45 @@ class AddressView(ListView):
 
 class MakeDefalut(View):
     def get(self, request, *args, **kwargs):
-        print(kwargs['slug'])
         address = Adress.objects.get(id = kwargs['slug'])
         if address:
-            p = Profile.objects.get(user = self.request.user)
-            p.default_address = address
-            p.save()
+            address.default = True
+            address.save()
         return HttpResponseRedirect('/addressview/')
 
 class DashboardView(View):
     def get(self, request, *args, **kwargs):
         context ={
-            'profile' : Profile.objects.get(user = self.request.user)
+            'profile' : Profile.objects.get(user = self.request.user),
+            'default_address' : Adress.objects.get(default=True),
+            'orders' : Orders.objects.all(),
         }
 
         return render(request, 'profiles/dashboard.html', context)
+    
+class OrdersView(ListView):
+    model = Orders
+    template_name = 'profiles/account-orders.html'
+    context_object_name = 'orders'
+    ordering = ['-id']
+
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        queryset.filter(user=self.request.user)
+
+        return queryset
+
+class OrderDetails(DetailView):
+    model = Orders
+    template_name = 'profiles/account-order-details.html'
+    context_object_name = 'order'
+    slug_field = 'id'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart = Orders.objects.get(id = self.kwargs['slug']).cart
+        cartproducts = cart.products.all()
+        context['cartproducts'] = cartproducts
+        return context
 
 # class EditProfileView(CustomHtmxMixin, TemplateView):
 #     template_name = 'profile.html'

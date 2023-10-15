@@ -48,14 +48,39 @@
                     <form action="{% url 'make-order' %}" method="POST">
                         
                         {% csrf_token %}
+
                         {{ form.non_field_errors }}
 
-                        
-                    
+
                     
                     <div class="card mb-lg-0">
                         <div class="card-body">
-                            <h3 class="card-title">Billing details</h3>
+                            <h3 class="card-title">Реквезиты</h3>
+                            Доставка будет произведена по вашему основному адресу:
+                            <div class="addresses-list__item card address-card">
+                                <div class="address-card__badge">Основной</div>
+                                <div class="address-card__body">
+                                    <div class="address-card__name">{{ address.first_name }} {{ address.last_name }}</div>
+                                    <div class="address-card__row">
+                                        {{ address.country }}<br>
+                                        {{ address.city }}<br>
+                                        {{ address.street }}, {{ address.appartament }}
+                                    </div>
+                                    <div class="address-card__row">
+                                        <div class="address-card__row-title">Phone Number</div>
+                                        <div class="address-card__row-content">{{ address.phone }}</div>
+                                    </div>
+                                    <div class="address-card__row">
+                                        <div class="address-card__row-title">Email Address</div>
+                                        <div class="address-card__row-content">{{ address.email }}</div>
+                                    </div>
+                                    <div class="address-card__footer">
+                                        <a href="{% url 'edit-address-view' slug=address.pk %}">Изменить</a>&nbsp;&nbsp;
+                                        <a href="/removeaddress/{{address.pk}}/">Удалить</a><br>
+                                        <a href="{% url 'addresses-view' %}">Другие адреса</a>
+                                    </div>
+                                </div>
+                            </div>
                             {% for field in form %}
                             <div class="form-group">
                                 {{ field.label_tag }}
@@ -134,7 +159,7 @@
                                 </div>
                             </div> -->
                         </div>
-                        <div class="card-divider"></div>
+                        <!-- <div class="card-divider"></div>
                         <div class="card-body">
                             <h3 class="card-title">Shipping Details</h3>
                             <div class="form-group">
@@ -155,7 +180,7 @@
                                 <label for="checkout-comment">Order notes <span class="text-muted">(Optional)</span></label>
                                 <textarea id="checkout-comment" class="form-control" rows="4"></textarea>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0">

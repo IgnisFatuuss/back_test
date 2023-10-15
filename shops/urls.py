@@ -22,4 +22,7 @@ urlpatterns = [
     path('makereview/', views.MakeReview.as_view(), name='make-review'),
     path('makerequestion/', views.MakeQuestion.as_view(), name='make-question'),
     path('makeansnwer/', views.MakeAnswer.as_view(), name='make-answer'),
+    path('wishlist/', views.WishListView.as_view(), name='wishlist'),
+    path('add-to-wishlist/<str:slug>', views.AddToWishList.as_view(), name='add-to-wishlist'),
+    path('remove-from-wishlist/<str:slug>', views.RemoveFromWishList.as_view(), name='remove-from-wishlist'),
 ]

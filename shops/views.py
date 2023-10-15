@@ -10,6 +10,7 @@ from django.http import HttpRequest, HttpResponseRedirect
 from .forms import *
 from .utils import recalc_cart
 from django.db import transaction
+# from Profile.models import Adress
 # Create your views here.
 
 class GetTags:
@@ -77,6 +78,8 @@ class ProductDetailView(DetailView):
         questionform = QuestionForm(self.request.POST or None)
         # users = self.request.user.is_staff
         answerform = AnswerForm(self.request.POST or None)
+        wishlist = WishList.objects.filter(product=Products.objects.get(slug=self.kwargs['slug']))
+        context['wishlist'] = wishlist
         context['questionform'] = questionform
         context['form'] = form
         context['answerform'] = answerform
@@ -590,7 +593,6 @@ class AddToCartView(View):
             
             cart_product.qty += 1
             cart_product.save()
-            print(cart_product.qty, 'AASDASDASDASDASdASDASDQWDQWDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD')
         else:
             cart[0].save()
             cart[0].products.add(cart_product)
@@ -602,9 +604,9 @@ class AddToCartView(View):
 class CartView(View):
 
     def get(self, request, *args, **kwargs):
-        cart = Carts.objects.get(owner = request.user, in_order = False)
+        cart = Carts.objects.get_or_create(owner = request.user, in_order = False)
         context ={
-            'cart':cart,
+            'cart':cart[0],
             
         }
         return render(request, 'shops/cart.html', context)
@@ -641,10 +643,11 @@ class CheckoutView(View):
     def get(self, request, *args, **kwargs):
         cart = Carts.objects.get(owner = request.user, in_order=False)
         form = OrderForm(request.POST or None)
+        default_address = Adress.objects.get(default=True)
         context ={
             'cart':cart,
             'form':form,
-            
+            'address':default_address,
         }
         return render(request, 'shops/checkout.html', context)
     
@@ -655,19 +658,19 @@ class MakeOrderView(View):
         if form.is_valid():
             new_order = form.save(commit=False)
             new_order.user = request.user
-            new_order.first_name = form.cleaned_data['first_name']
-            new_order.last_name = form.cleaned_data['last_name']
-            new_order.company_name = form.cleaned_data['company_name']
-            new_order.country = form.cleaned_data['country']
-            new_order.city = form.cleaned_data['city']
-            new_order.street = form.cleaned_data['street']
-            new_order.postcode = form.cleaned_data['postcode']
-            new_order.appartament = form.cleaned_data['appartament']
-            new_order.email = form.cleaned_data['email']
-            new_order.phone = form.cleaned_data['phone']
-            new_order.notes = form.cleaned_data['notes']
+            # new_order.first_name = form.cleaned_data['first_name']
+            # new_order.last_name = form.cleaned_data['last_name']
+            # new_order.company_name = form.cleaned_data['company_name']
+            # new_order.country = form.cleaned_data['country']
+            # new_order.city = form.cleaned_data['city']
+            # new_order.street = form.cleaned_data['street']
+            # new_order.postcode = form.cleaned_data['postcode']
+            # new_order.appartament = form.cleaned_data['appartament']
+            # new_order.email = form.cleaned_data['email']
+            # new_order.phone = form.cleaned_data['phone']
+            # new_order.notes = form.cleaned_data['notes']
             cart = Carts.objects.get(owner = request.user, in_order=False)
-            print(cart.final_price)
+            new_order.address = Adress.objects.get(default=True)
             new_order.order_sum = int(cart.final_price)
             new_order.cart = cart
             new_order.save()
@@ -676,5 +679,48 @@ class MakeOrderView(View):
             new_order.save()
             return HttpResponseRedirect('/')
         return HttpResponseRedirect('/checkout/')
-    
 
+class WishListView(ListView):
+    # model = WishList
+    # context_object_name = 'wishlist'
+    # template_name = 'shops/wishlist.html'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+        
+    #     context['products'] = WishList.objects.get(user=self.request.user).product
+
+    #     return context
+    def get(self, request, *args, **kwargs):
+        context ={
+            'wishlist' : WishList.objects.get_or_create(user = self.request.user)[0],
+            'products' : WishList.objects.get_or_create(user=self.request.user)[0].product.all(),
+        }
+
+        return render(request, 'shops/wishlist.html', context)
+
+
+class AddToWishList(View):
+    def get(self, request, *args, **kwargs):
+        product_slug = kwargs.get('slug')
+        wishlist = WishList.objects.get_or_create(user = request.user)
+        product =  Products.objects.get(slug = product_slug)
+        product_in_wishlist = WishList.objects.filter(user=request.user, product__slug=product_slug)
+        print(product_in_wishlist)
+        if not product_in_wishlist:
+            wishlist[0].product.add(product)
+            wishlist[0].save()
+
+        return HttpResponseRedirect('/product/' + product_slug)
+    
+class RemoveFromWishList(View):
+    def get(self, request, *args, **kwargs):
+        product_slug = kwargs.get('slug')
+        wishlist = WishList.objects.get_or_create(user = request.user)
+        product =  Products.objects.get(slug = product_slug)
+        product_in_wishlist = WishList.objects.filter(user=request.user, product__slug=product_slug)
+        if product_in_wishlist:
+            wishlist[0].product.remove(product)
+            wishlist[0].save()
+
+        return HttpResponseRedirect('/wishlist/')
