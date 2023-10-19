@@ -27,7 +27,10 @@ class SocialInline(NestedTabularInline):
 class GeneralSettingsAdmin(admin.ModelAdmin):
     inlines = [ContactsInline, SocialInline, PhonesInline]
     def has_add_permission(self, request):
-        return False
+        # Проверяем, есть ли записи в модели GeneralSettings
+        if GeneralSettings.objects.exists():
+            return False  # Запрещаем создание новых записей
+        return True  # Разрешаем создание первой записи
 
     def get_urls(self):
         from django.urls import path
@@ -38,7 +41,13 @@ class GeneralSettingsAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def redirect_to_edit(self, request):
-        url = reverse('admin:website_generalsettings_change', args=[1])
+        # Перенаправляем на страницу редактирования первой записи,
+        # если она существует
+        if GeneralSettings.objects.exists():
+            url = reverse('admin:website_generalsettings_change', args=[1])
+        else:
+            # Если записей нет, перенаправляем на страницу создания новой записи
+            url = reverse('admin:website_generalsettings_add')
         return HttpResponseRedirect(url)
 
 

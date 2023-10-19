@@ -45,3 +45,17 @@ class AnswerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['answer'].widget = forms.TextInput(attrs={ 'class': 'form-control', 'type': 'text'})
 
+class ProductSearchForm(forms.Form):
+    search_description = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'search__input',
+            'placeholder': 'Поиск',
+            'name': 'search',
+            'aria-label': 'Site search',
+            'type': 'text',
+            'autocomplete': 'off'
+        })
+    )
+

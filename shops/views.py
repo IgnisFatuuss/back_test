@@ -1,7 +1,7 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_list_or_404, get_object_or_404
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import ListView, DetailView, View, TemplateView
 from .models import *
 from django.http import JsonResponse
 from django.db.models import Prefetch, Q, Min, Max
@@ -38,10 +38,9 @@ class ProductListView(ListView, GetTags):
         context = super().get_context_data(**kwargs)
         categories = Categories.objects.all()
         brands = Brands.objects.all()
-        variations = VariationProducts.objects.all()
         product_tag_1 = Products.objects.filter(tag__id=2)
-        products_new = Products.objects.all().order_by('create')
-
+        context['slider'] = Sliders.objects.get(id = 1)
+        context['banner'] = Banners.objects.get(id = 1)
         context['categories'] = categories
         context['brands'] = brands
         context['product_tag_1'] = product_tag_1
@@ -724,3 +723,24 @@ class RemoveFromWishList(View):
             wishlist[0].save()
 
         return HttpResponseRedirect('/wishlist/')
+    
+class SearchView(TemplateView):
+    template_name = 'search.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = ProductSearchForm(self.request.GET)
+        selected_category = self.request.GET.get('category')
+        if form.is_valid():
+            search_description = form.cleaned_data.get('search_description')
+            if selected_category != "None" and selected_category != None:
+                product = Products.objects.filter(description__icontains = search_description, category = Categories.objects.get(id = selected_category))
+                print('запрос 2')
+            else:
+                print('запрос 1')
+                product = Products.objects.filter(description__icontains = search_description)
+        else:
+            product = Products.objects.all()
+        context['products'] = product
+        context['form'] = form 
+              
+        return context

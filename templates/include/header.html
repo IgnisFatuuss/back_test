@@ -1,3 +1,11 @@
+{% load static i18n %}
+{% load general_tag %}
+{% load i18n product_tag %}
+{% load profile_tag %}
+{% load cart_tag %}
+{% load wishlist_tag %}
+{% load static %}
+
 <header class="site__header d-lg-none">
     <!-- data-sticky-mode - one of [pullToShow, alwaysOnTop] -->
     <div class="mobile-header mobile-header--sticky" data-sticky-mode="pullToShow">
@@ -6,7 +14,7 @@
                 <div class="mobile-header__body">
                     <button class="mobile-header__menu-button">
                         <svg width="18px" height="14px">
-                            <use xlink:href="images/sprite.svg#menu-18x14"></use>
+                            <use xlink:href="{% static 'site/images/sprite.svg'%}#menu-18x14"></use>
                         </svg>
                     </button>
                     <a class="mobile-header__logo" href="{% url 'index' %}">
@@ -34,20 +42,7 @@
                     </a>
                     <div class="search search--location--mobile-header mobile-header__search">
                         <div class="search__body">
-                            <form class="search__form" action="">
-                                <input class="search__input" name="search" placeholder="Search over 10,000 products" aria-label="Site search" type="text" autocomplete="off">
-                                <button class="search__button search__button--type--submit" type="submit">
-                                    <svg width="20px" height="20px">
-                                        <use xlink:href="images/sprite.svg#search-20"></use>
-                                    </svg>
-                                </button>
-                                <button class="search__button search__button--type--close" type="button">
-                                    <svg width="20px" height="20px">
-                                        <use xlink:href="images/sprite.svg#cross-20"></use>
-                                    </svg>
-                                </button>
-                                <div class="search__border"></div>
-                            </form>
+                            {% include 'searchform.html' %}
                             <div class="search__suggestions suggestions suggestions--location--mobile-header"></div>
                         </div>
                     </div>
@@ -56,7 +51,7 @@
                             <button class="indicator__button">
                                 <span class="indicator__area">
                                     <svg width="20px" height="20px">
-                                        <use xlink:href="images/sprite.svg#search-20"></use>
+                                        <use xlink:href="{% static 'site/images/sprite.svg'%}#search-20"></use>
                                     </svg>
                                 </span>
                             </button>
@@ -65,7 +60,7 @@
                             <a href="wishlist.html" class="indicator__button">
                                 <span class="indicator__area">
                                     <svg width="20px" height="20px">
-                                        <use xlink:href="images/sprite.svg#heart-20"></use>
+                                        <use xlink:href="{% static 'site/images/sprite.svg'%}#heart-20"></use>
                                     </svg>
                                     <span class="indicator__value">0</span>
                                 </span>
@@ -75,7 +70,7 @@
                             <a href="{% url 'cart' %}" class="indicator__button">
                                 <span class="indicator__area">
                                     <svg width="20px" height="20px">
-                                        <use xlink:href="images/sprite.svg#cart-20"></use>
+                                        <use xlink:href="{% static 'site/images/sprite.svg'%}#cart-20"></use>
                                     </svg>
                                     <span class="indicator__value">3</span>
                                 </span>
@@ -96,139 +91,59 @@
             <div class="topbar__container container">
                 <div class="topbar__row">
                     <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="about-us/">About Us</a>
+                        <a class="topbar-link" href="contact-us/">Руководство</a>
                     </div>
                     <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="contact-us/">Contacts</a>
+                        <a class="topbar-link" href="">Контакты</a>
                     </div>
                     <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="">Store Location</a>
+                        <a class="topbar-link" href="{% url 'faq' %}">ЧаВо</a>
                     </div>
                     <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="track-order.html">Track Order</a>
-                    </div>
-                    <div class="topbar__item topbar__item--link">
-                        <a class="topbar-link" href="blogs/">Blog</a>
+                        <a class="topbar-link" href="{% url 'blogs' %}">Блог</a>
                     </div>
                     <div class="topbar__spring"></div>
+
                     <div class="topbar__item">
-                        <div class="topbar-dropdown">
+                        <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                            <input name="next" type="hidden" value="{{ redirect_to }}" >
+                            <select name="language">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% get_language_info_list for LANGUAGES as languages %}
+                                {% for language in languages %}
+                                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
+                                            selected{% endif %} class="menu__item">
+                                        {{ language.name_local }} ({{ language.code }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" value="Go">
+                        </form>
+                        {% comment %} <div class="topbar-dropdown">
                             <button class="topbar-dropdown__btn" type="button">
-                                My Account
+                                Языки: <span class="topbar__item-value">EN</span>
                                 <svg width="7px" height="5px">
-                                    <use xlink:href="images/sprite.svg#arrow-rounded-down-7x5"></use>
+                                    <use xlink:href="{% static 'site/images/sprite.svg'%}#arrow-rounded-down-7x5"></use>
                                 </svg>
                             </button>
                             <div class="topbar-dropdown__body">
                                 <!-- .menu -->
-                                <div class="menu menu--layout--topbar ">
-                                    <div class="menu__submenus-container"></div>
-                                    <ul class="menu__list">
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="account-dashboard.html">
-                                                Dashboard
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="{% url 'account-profile' %}">
-                                                Edit Profile
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="account-orders.html">
-                                                Order History
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="account-addresses.html">
-                                                Addresses
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="account-password.html">
-                                                Password
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="{% url 'account_logout' %}">
-                                                Logout
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- .menu / end -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topbar__item">
-                        <div class="topbar-dropdown">
-                            <button class="topbar-dropdown__btn" type="button">
-                                Currency: <span class="topbar__item-value">USD</span>
-                                <svg width="7px" height="5px">
-                                    <use xlink:href="images/sprite.svg#arrow-rounded-down-7x5"></use>
-                                </svg>
-                            </button>
-                            <div class="topbar-dropdown__body">
-                                <!-- .menu -->
-                                <div class="menu menu--layout--topbar ">
-                                    <div class="menu__submenus-container"></div>
-                                    <ul class="menu__list">
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="">
-                                                € Euro
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="">
-                                                £ Pound Sterling
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="">
-                                                $ US Dollar
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                            <div class="menu__item-submenu-offset"></div>
-                                            <a class="menu__item-link" href="">
-                                                ₽ Russian Ruble
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- .menu / end -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="topbar__item">
-                        <div class="topbar-dropdown">
-                            <button class="topbar-dropdown__btn" type="button">
-                                Language: <span class="topbar__item-value">EN</span>
-                                <svg width="7px" height="5px">
-                                    <use xlink:href="images/sprite.svg#arrow-rounded-down-7x5"></use>
-                                </svg>
-                            </button>
-                            <div class="topbar-dropdown__body">
-                                <!-- .menu -->
+                                <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ redirect_to }}" >
+                                    <select name="language" class="menu__list">
+                                        {% get_current_language as LANGUAGE_CODE %}
+                                        {% get_available_languages as LANGUAGES %}
+                                        {% get_language_info_list for LANGUAGES as languages %}
+                                        {% for language in languages %}
+                                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
+                                                    selected{% endif %} class="menu__item">
+                                                {{ language.name_local }} ({{ language.code }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="submit" value="Go">
+                                </form>
                                 <div class="menu menu--layout--topbar  menu--with-icons ">
                                     <div class="menu__submenus-container"></div>
                                     <ul class="menu__list">
@@ -276,7 +191,7 @@
                                 </div>
                                 <!-- .menu / end -->
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                 </div>
             </div>
@@ -295,48 +210,18 @@
             <div class="site-header__search">
                 <div class="search search--location--header ">
                     <div class="search__body">
-                        <form class="search__form" action="">
-                            <select class="search__categories" aria-label="Category">
-                                {% for category in categories %}
-                                    {% if not category.parent %}
-                                        <option>{{ category.name }}</option>
-                                        {% if category.child.count >= 1 %}
-                                            {% for subcategory in category.child.all %}
-                                            <option>&nbsp;&nbsp;&nbsp;&nbsp;{{ subcategory.name }}</option>
-                                            {% endfor %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                <option value="all">All Categories</option>
-                                <option>Instruments</option>
-                                <option>&nbsp;&nbsp;&nbsp;&nbsp;Power Tools</option>
-                                <option>&nbsp;&nbsp;&nbsp;&nbsp;Hand Tools</option>
-                                <option>&nbsp;&nbsp;&nbsp;&nbsp;Machine Tools</option>
-                                <option>&nbsp;&nbsp;&nbsp;&nbsp;Power Machinery</option>
-                                <option>&nbsp;&nbsp;&nbsp;&nbsp;Measurement</option>
-                                <option>&nbsp;&nbsp;&nbsp;&nbsp;Clothes and PPE</option>
-                                <option>Electronics</option>
-                                <option>Computers</option>
-                                <option>Automotive</option>
-                                <option>Furniture & Appliances</option>
-                                <option>Music & Books</option>
-                                <option>Health & Beauty</option>
-                            </select>
-                            <input class="search__input" name="search" placeholder="Search over 10,000 products" aria-label="Site search" type="text" autocomplete="off">
-                            <button class="search__button search__button--type--submit" type="submit">
-                                <svg width="20px" height="20px">
-                                    <use xlink:href="images/sprite.svg#search-20"></use>
-                                </svg>
-                            </button>
-                            <div class="search__border"></div>
-                        </form>
+                        {% productsearchform %}
                         <div class="search__suggestions suggestions suggestions--location--header"></div>
                     </div>
                 </div>
             </div>
             <div class="site-header__phone">
-                <div class="site-header__phone-title">Customer Service</div>
-                <div class="site-header__phone-number">(800) 060-0730</div>
+                <div class="site-header__phone-title">Номер телефона поддержки</div>
+                <div class="site-header__phone-number">{% header_phone as phone %}
+                    {% if phone %}
+                        {{ phone.phone }}
+                    {% endif %}
+                </div>
             </div>
         </div>
         <div class="site-header__nav-panel">
@@ -344,525 +229,29 @@
             <div class="nav-panel nav-panel--sticky" data-sticky-mode="pullToShow">
                 <div class="nav-panel__container container">
                     <div class="nav-panel__row">
-                        <div class="nav-panel__departments">
-                            <!-- .departments -->
-                            <div class="departments  departments--open departments--fixed " data-departments-fixed-by=".block-slideshow">
-                                <div class="departments__body">
-                                    <div class="departments__links-wrapper">
-                                        <div class="departments__submenus-container"></div>
-
-
-                                    </div>
-                                </div>
-                                <button class="departments__button">
-                                    <svg class="departments__button-icon" width="18px" height="14px">
-                                        <use xlink:href="images/sprite.svg#menu-18x14"></use>
-                                    </svg>
-                                    Shop By Category
-                                    <svg class="departments__button-arrow" width="9px" height="6px">
-                                        <use xlink:href="images/sprite.svg#arrow-rounded-down-9x6"></use>
-                                    </svg>
-                                </button>
-                            </div>
-                            <!-- .departments / end -->
-                        </div>
+                        {% include 'include/header-category.html' %}
                         <!-- .nav-links -->
                         
                         <div class="nav-panel__nav-links nav-links">
                             <ul class="nav-links__list">
                                 <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="index.html">
+                                    <a class="nav-links__item-link" href="/">
                                         <div class="nav-links__item-body">
-                                            Home
-                                            <svg class="nav-links__item-arrow" width="9px" height="6px">
-                                                <use xlink:href="images/sprite.svg#arrow-rounded-down-9x6"></use>
-                                            </svg>
+                                            Главная
                                         </div>
                                     </a>
-                                    <div class="nav-links__submenu nav-links__submenu--type--menu">
-                                        <!-- .menu -->
-                                        <div class="menu menu--layout--classic ">
-                                            <div class="menu__submenus-container"></div>
-                                            <ul class="menu__list">
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="index.html">
-                                                        Home 1 Slideshow
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="index-2.html">
-                                                        Home 2 Slideshow
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="index-3.html">
-                                                        Home 1 Finder
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="index-4.html">
-                                                        Home 2 Finder
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="offcanvas-cart.html">
-                                                        Offcanvas Cart
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- .menu / end -->
-                                    </div>
                                 </li>
                                 <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="">
+                                    <a class="nav-links__item-link" href="{% url 'shop' %}">
                                         <div class="nav-links__item-body">
-                                            Megamenu
-                                            <svg class="nav-links__item-arrow" width="9px" height="6px">
-                                                <use xlink:href="images/sprite.svg#arrow-rounded-down-9x6"></use>
-                                            </svg>
+                                            Магазины
                                         </div>
                                     </a>
-                                    <div class="nav-links__submenu nav-links__submenu--type--megamenu nav-links__submenu--size--nl">
-                                        <!-- .megamenu -->
-                                        <div class="megamenu ">
-                                            <div class="megamenu__body">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <ul class="megamenu__links megamenu__links--level--0">
-                                                            <li class="megamenu__item  megamenu__item--with-submenu ">
-                                                                <a href="">Power Tools</a>
-                                                                <ul class="megamenu__links megamenu__links--level--1">
-                                                                    <li class="megamenu__item"><a href="">Engravers</a></li>
-                                                                    <li class="megamenu__item"><a href="">Wrenches</a></li>
-                                                                    <li class="megamenu__item"><a href="">Wall Chaser</a></li>
-                                                                    <li class="megamenu__item"><a href="">Pneumatic Tools</a></li>
-                                                                </ul>
-                                                            </li>
-                                                            <li class="megamenu__item  megamenu__item--with-submenu ">
-                                                                <a href="">Machine Tools</a>
-                                                                <ul class="megamenu__links megamenu__links--level--1">
-                                                                    <li class="megamenu__item"><a href="">Thread Cutting</a></li>
-                                                                    <li class="megamenu__item"><a href="">Chip Blowers</a></li>
-                                                                    <li class="megamenu__item"><a href="">Sharpening Machines</a></li>
-                                                                    <li class="megamenu__item"><a href="">Pipe Cutters</a></li>
-                                                                    <li class="megamenu__item"><a href="">Slotting machines</a></li>
-                                                                    <li class="megamenu__item"><a href="">Lathes</a></li>
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <ul class="megamenu__links megamenu__links--level--0">
-                                                            <li class="megamenu__item  megamenu__item--with-submenu ">
-                                                                <a href="">Hand Tools</a>
-                                                                <ul class="megamenu__links megamenu__links--level--1">
-                                                                    <li class="megamenu__item"><a href="">Screwdrivers</a></li>
-                                                                    <li class="megamenu__item"><a href="">Handsaws</a></li>
-                                                                    <li class="megamenu__item"><a href="">Knives</a></li>
-                                                                    <li class="megamenu__item"><a href="">Axes</a></li>
-                                                                    <li class="megamenu__item"><a href="">Multitools</a></li>
-                                                                    <li class="megamenu__item"><a href="">Paint Tools</a></li>
-                                                                </ul>
-                                                            </li>
-                                                            <li class="megamenu__item  megamenu__item--with-submenu ">
-                                                                <a href="">Garden Equipment</a>
-                                                                <ul class="megamenu__links megamenu__links--level--1">
-                                                                    <li class="megamenu__item"><a href="">Motor Pumps</a></li>
-                                                                    <li class="megamenu__item"><a href="">Chainsaws</a></li>
-                                                                    <li class="megamenu__item"><a href="">Electric Saws</a></li>
-                                                                    <li class="megamenu__item"><a href="">Brush Cutters</a></li>
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- .megamenu / end -->
-                                    </div>
                                 </li>
                                 <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="/shop">
+                                    <a class="nav-links__item-link" href="{% url 'shop' %}">
                                         <div class="nav-links__item-body">
-                                            Shop
-                                            <svg class="nav-links__item-arrow" width="9px" height="6px">
-                                                <use xlink:href="images/sprite.svg#arrow-rounded-down-9x6"></use>
-                                            </svg>
-                                        </div>
-                                    </a>
-                                    <div class="nav-links__submenu nav-links__submenu--type--menu">
-                                        <!-- .menu -->
-                                        <div class="menu menu--layout--classic ">
-                                            <div class="menu__submenus-container"></div>
-                                            <ul class="menu__list">
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/shop">
-                                                        Shop Grid
-                                                        <svg class="menu__item-arrow" width="6px" height="9px">
-                                                            <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
-                                                        </svg>
-                                                    </a>
-                                                    <div class="menu__submenu">
-                                                        <!-- .menu -->
-                                                        <div class="menu menu--layout--classic ">
-                                                            <div class="menu__submenus-container"></div>
-                                                            <ul class="menu__list">
-                                                                <li class="menu__item">
-                                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                                    <div class="menu__item-submenu-offset"></div>
-                                                                    <a class="menu__item-link" href="shop/">
-                                                                        3 Columns Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li class="menu__item">
-                                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                                    <div class="menu__item-submenu-offset"></div>
-                                                                    <a class="menu__item-link" href="shop-grid-4-columns-full.html">
-                                                                        4 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li class="menu__item">
-                                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                                    <div class="menu__item-submenu-offset"></div>
-                                                                    <a class="menu__item-link" href="shop-grid-5-columns-full.html">
-                                                                        5 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <!-- .menu / end -->
-                                                    </div>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="shop-list.html">
-                                                        Shop List
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="shop-right-sidebar.html">
-                                                        Shop Right Sidebar
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="product.html">
-                                                        Product
-                                                        <svg class="menu__item-arrow" width="6px" height="9px">
-                                                            <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
-                                                        </svg>
-                                                    </a>
-                                                    <div class="menu__submenu">
-                                                        <!-- .menu -->
-                                                        <div class="menu menu--layout--classic ">
-                                                            <div class="menu__submenus-container"></div>
-                                                            <ul class="menu__list">
-                                                                <li class="menu__item">
-                                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                                    <div class="menu__item-submenu-offset"></div>
-                                                                    <a class="menu__item-link" href="product.html">
-                                                                        Product
-                                                                    </a>
-                                                                </li>
-                                                                <li class="menu__item">
-                                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                                    <div class="menu__item-submenu-offset"></div>
-                                                                    <a class="menu__item-link" href="product-alt.html">
-                                                                        Product Alt
-                                                                    </a>
-                                                                </li>
-                                                                <li class="menu__item">
-                                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                                    <div class="menu__item-submenu-offset"></div>
-                                                                    <a class="menu__item-link" href="product-sidebar.html">
-                                                                        Product Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <!-- .menu / end -->
-                                                    </div>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'cart' %}">
-                                                        Cart
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="cart-empty.html">
-                                                        Cart Empty
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'checkout' %}">
-                                                        Checkout
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="order-success.html">
-                                                        Order Success
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'wishlist' %}">
-                                                        Wishlist
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="compare.html">
-                                                        Compare
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="track-order.html">
-                                                        Track Order
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- .menu / end -->
-                                    </div>
-                                </li>
-                                <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="">
-                                        <div class="nav-links__item-body">
-                                            Account
-                                            <svg class="nav-links__item-arrow" width="9px" height="6px">
-                                                <use xlink:href="images/sprite.svg#arrow-rounded-down-9x6"></use>
-                                            </svg>
-                                        </div>
-                                    </a>
-                                    <div class="nav-links__submenu nav-links__submenu--type--menu">
-                                        <!-- .menu -->
-                                        <div class="menu menu--layout--classic ">
-                                            <div class="menu__submenus-container"></div>
-                                            <ul class="menu__list">
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'account_login' %}">
-                                                        Login
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'dashboard' %}">
-                                                        Dashboard
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'account-profile' %}">
-                                                        Edit Profile
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'orders-view' %}">
-                                                        Order History
-                                                    </a>
-                                                </li>
-
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'addresses-view' %}">
-                                                        Address Book
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="{% url 'edit-address-view' %}">
-                                                        Edit Address
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="account-password.html">
-                                                        Change Password
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- .menu / end -->
-                                    </div>
-                                </li>
-                                <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="/blogs">
-                                        <div class="nav-links__item-body">
-                                            Blog
-                                            <svg class="nav-links__item-arrow" width="9px" height="6px">
-                                                <use xlink:href="images/sprite.svg#arrow-rounded-down-9x6"></use>
-                                            </svg>
-                                        </div>
-                                    </a>
-                                    <div class="nav-links__submenu nav-links__submenu--type--menu">
-                                        <!-- .menu -->
-                                        <div class="menu menu--layout--classic ">
-                                            <div class="menu__submenus-container"></div>
-                                            <ul class="menu__list">
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="blog-classic.html">
-                                                        Blog Classic
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="blog-grid.html">
-                                                        Blog Grid
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="blog-list.html">
-                                                        Blog List
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="blog-left-sidebar.html">
-                                                        Blog Left Sidebar
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="post.html">
-                                                        Post Page
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="post-without-sidebar.html">
-                                                        Post Without Sidebar
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- .menu / end -->
-                                    </div>
-                                </li>
-                                <li class="nav-links__item  nav-links__item--has-submenu ">
-                                    <a class="nav-links__item-link" href="">
-                                        <div class="nav-links__item-body">
-                                            Pages
-                                            <svg class="nav-links__item-arrow" width="9px" height="6px">
-                                                <use xlink:href="images/sprite.svg#arrow-rounded-down-9x6"></use>
-                                            </svg>
-                                        </div>
-                                    </a>
-                                    <div class="nav-links__submenu nav-links__submenu--type--menu">
-                                        <!-- .menu -->
-                                        <div class="menu menu--layout--classic ">
-                                            <div class="menu__submenus-container"></div>
-                                            <ul class="menu__list">
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/about/">
-                                                        About Us
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/contact-us/">
-                                                        Contact Us
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="contact-us-alt.html">
-                                                        Contact Us Alt
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/404/">
-                                                        404
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/terms-and-conditions/">
-                                                        Terms And Conditions
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/faq/">
-                                                        FAQ
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/components/">
-                                                        Components
-                                                    </a>
-                                                </li>
-                                                <li class="menu__item">
-                                                    <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
-                                                    <div class="menu__item-submenu-offset"></div>
-                                                    <a class="menu__item-link" href="/typography/">
-                                                        Typography
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- .menu / end -->
-                                    </div>
-                                </li>
-                                <li class="nav-links__item ">
-                                    <a class="nav-links__item-link" href="https://themeforest.net/item/stroyka-tools-store-html-template/23326943">
-                                        <div class="nav-links__item-body">
-                                            Buy Theme
+                                            Каталог
                                         </div>
                                     </a>
                                 </li>
@@ -870,31 +259,39 @@
                         </div>
 
                         <!-- .nav-links / end -->
+                        
                         <div class="nav-panel__indicators">
                             <div class="indicator">
-                                <a href="wishlist.html" class="indicator__button">
+                                <a href="{% url 'wishlist' %}" class="indicator__button">
+                                    {% if user.is_authenticated %}
                                     <span class="indicator__area">
                                         <svg width="20px" height="20px">
-                                            <use xlink:href="images/sprite.svg#heart-20"></use>
+                                            <use xlink:href="{% static 'site/images/sprite.svg'%}#heart-20"></use>
                                         </svg>
-                                        <span class="indicator__value">0</span>
+                                        {% wishtag as wishlist %}
+                                        <span class="indicator__value">{{ wishlist.product.count }}</span>
                                     </span>
+                                    {% endif %}
                                 </a>
                             </div>
+                            {% if user.is_authenticated %}
                             <div class="indicator indicator--trigger--click">
+                                {% carttag as cart %}
                                 <a href="cart.html" class="indicator__button">
                                     <span class="indicator__area">
                                         <svg width="20px" height="20px">
-                                            <use xlink:href="images/sprite.svg#cart-20"></use>
+                                            <use xlink:href="{% static 'site/images/sprite.svg'%}#cart-20"></use>
                                         </svg>
-                                        <span class="indicator__value">3</span>
+                                        <span class="indicator__value">{{ cart.total_products }}</span>
                                     </span>
                                 </a>
                                 <div class="indicator__dropdown">
                                     <!-- .dropcart -->
+                                    
                                     <div class="dropcart dropcart--style--dropdown">
                                         <div class="dropcart__body">
                                             <div class="dropcart__products-list">
+                                                {% for productcart in cart.products.all %}
                                                 <div class="dropcart__product">
                                                     <div class="product-image dropcart__product-image">
                                                         <a href="product.html" class="product-image__body">
@@ -902,103 +299,121 @@
                                                         </a>
                                                     </div>
                                                     <div class="dropcart__product-info">
-                                                        <div class="dropcart__product-name"><a href="product.html">Electric Planer Brandix KL370090G 300 Watts</a></div>
+                                                        <div class="dropcart__product-name"><a href="product/{{ productcart.product.slug }}">{{ productcart.product.name }}</a></div>
                                                         <ul class="dropcart__product-options">
-                                                            <li>Color: Yellow</li>
-                                                            <li>Material: Aluminium</li>
+                                                            {% for var in productcart.product.variationproduct.all %}
+                                                                {% for attribute in var.attributs.all|slice:3 %}
+                                                                            <li>{{ attribute.variation.name }}: {{ attribute.name }}</li>
+                                                                {% endfor %}
+                                                            {% endfor %}
                                                         </ul>
                                                         <div class="dropcart__product-meta">
-                                                            <span class="dropcart__product-quantity">2</span> ×
-                                                            <span class="dropcart__product-price">$699.00</span>
+                                                            <span class="dropcart__product-quantity">{{ productcart.qty }}</span> ×
+                                                            <span class="dropcart__product-price">${{ productcart.product.variationproduct.first.price }}</span>
                                                         </div>
                                                     </div>
                                                     <button type="button" class="dropcart__product-remove btn btn-light btn-sm btn-svg-icon">
                                                         <svg width="10px" height="10px">
-                                                            <use xlink:href="images/sprite.svg#cross-10"></use>
+                                                            <use xlink:href="{% static 'site/images/sprite.svg'%}#cross-10"></use>
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                <div class="dropcart__product">
-                                                    <div class="product-image dropcart__product-image">
-                                                        <a href="product.html" class="product-image__body">
-                                                            <img class="product-image__img" src="images/products/product-2.jpg" alt="">
-                                                        </a>
-                                                    </div>
-                                                    <div class="dropcart__product-info">
-                                                        <div class="dropcart__product-name"><a href="product.html">Undefined Tool IRadix DPS3000SY 2700 watts</a></div>
-                                                        <div class="dropcart__product-meta">
-                                                            <span class="dropcart__product-quantity">1</span> ×
-                                                            <span class="dropcart__product-price">$849.00</span>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="dropcart__product-remove btn btn-light btn-sm btn-svg-icon">
-                                                        <svg width="10px" height="10px">
-                                                            <use xlink:href="images/sprite.svg#cross-10"></use>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <div class="dropcart__product">
-                                                    <div class="product-image dropcart__product-image">
-                                                        <a href="product.html" class="product-image__body">
-                                                            <img class="product-image__img" src="images/products/product-5.jpg" alt="">
-                                                        </a>
-                                                    </div>
-                                                    <div class="dropcart__product-info">
-                                                        <div class="dropcart__product-name"><a href="product.html">Brandix Router Power Tool 2017ERXPK</a></div>
-                                                        <ul class="dropcart__product-options">
-                                                            <li>Color: True Red</li>
-                                                        </ul>
-                                                        <div class="dropcart__product-meta">
-                                                            <span class="dropcart__product-quantity">3</span> ×
-                                                            <span class="dropcart__product-price">$1,210.00</span>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="dropcart__product-remove btn btn-light btn-sm btn-svg-icon">
-                                                        <svg width="10px" height="10px">
-                                                            <use xlink:href="images/sprite.svg#cross-10"></use>
-                                                        </svg>
-                                                    </button>
-                                                </div>
+                                                {% endfor %}
                                             </div>
                                             <div class="dropcart__totals">
                                                 <table>
                                                     <tr>
-                                                        <th>Subtotal</th>
-                                                        <td>$5,877.00</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Shipping</th>
-                                                        <td>$25.00</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Tax</th>
-                                                        <td>$0.00</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Total</th>
-                                                        <td>$5,902.00</td>
+                                                        <th>Итоговая цена</th>
+                                                        <td>${{ cart.final_price }}</td>
                                                     </tr>
                                                 </table>
                                             </div>
                                             <div class="dropcart__buttons">
-                                                <a class="btn btn-secondary" href="cart.html">View Cart</a>
-                                                <a class="btn btn-primary" href="checkout.html">Checkout</a>
+                                                <a class="btn btn-secondary" href="{% url 'cart' %}">Посмотреть корзину</a>
+                                                <a class="btn btn-primary" href="{% url 'checkout' %}">Оформить</a>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <!-- .dropcart / end -->
                                 </div>
                             </div>
+                            {% endif %}
                             <div class="indicator indicator--trigger--click">
                                 <a href="account-login.html" class="indicator__button">
                                     <span class="indicator__area">
                                         <svg width="20px" height="20px">
-                                            <use xlink:href="images/sprite.svg#person-20"></use>
+                                            <use xlink:href="{% static 'site/images/sprite.svg'%}#person-20"></use>
                                         </svg>
                                     </span>
                                 </a>
                                 <div class="indicator__dropdown">
                                     <div class="account-menu">
+                                        {% if user.is_authenticated %}
+                                        <div class="account-menu__divider"></div>
+                                        <a href="{% url 'dashboard' %}" class="account-menu__user">
+                                            <div class="account-menu__user-avatar">
+                                                {% profiletag as profile %}
+                                                {% if profile %}
+                                                <img src="{{ profile.avatar.url }}" alt="">
+                                                {% endif %}
+                                            </div>
+                                            <div class="account-menu__user-info">
+                                                {% addresstag as address %}
+                                                {% if address %}
+                                                <div class="account-menu__user-name">{{ address.first_name }} {{ address.last_name }}</div>
+                                                
+                                                <div class="account-menu__user-email">{{ address.email }}</div>
+                                                {% else %}
+                                                <a href="{% url 'addresses-view' %}">Заполните и выберите ваш адрес</a>
+                                                {% endif %}
+                                            </div>
+                                        </a>
+                                        <div class="account-menu__divider"></div>
+                                        <ul class="account-menu__links">
+                                            <li class="menu__item">
+                                                <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
+                                                <div class="menu__item-submenu-offset"></div>
+                                                <a class="menu__item-link" href="{% url 'account-profile' %}">
+                                                    Изменить профиль
+                                                </a>
+                                            </li>
+                                            <li class="menu__item">
+                                                <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
+                                                <div class="menu__item-submenu-offset"></div>
+                                                <a class="menu__item-link" href="{% url 'orders-view' %}">
+                                                    История заказов
+                                                </a>
+                                            </li>
+    
+                                            <li class="menu__item">
+                                                <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
+                                                <div class="menu__item-submenu-offset"></div>
+                                                <a class="menu__item-link" href="{% url 'addresses-view' %}">
+                                                    Список адресов
+                                                </a>
+                                            </li>
+                                            <li class="menu__item">
+                                                <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
+                                                <div class="menu__item-submenu-offset"></div>
+                                                <a class="menu__item-link" href="{% url 'edit-address-view' %}">
+                                                    Изменить адрес
+                                                </a>
+                                            </li>
+                                            <li class="menu__item">
+                                                <!-- This is a synthetic element that allows to adjust the vertical offset of the submenu using CSS. -->
+                                                <div class="menu__item-submenu-offset"></div>
+                                                <a class="menu__item-link" href="account-password.html">
+                                                    Сменить пароль
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="account-menu__divider"></div>
+                                        <ul class="account-menu__links">
+                                            <li><a href="{% url 'account_logout' %}">Выйти</a></li>
+                                        </ul>
+                                        {% else %}
+                                        
                                         <form class="account-menu__form">
                                             <div class="account-menu__form-title">Log In to Your Account</div>
                                             <div class="form-group">
@@ -1017,27 +432,7 @@
                                             </div>
                                             <div class="account-menu__form-link"><a href="account-login.html">Create An Account</a></div>
                                         </form>
-                                        <div class="account-menu__divider"></div>
-                                        <a href="account-dashboard.html" class="account-menu__user">
-                                            <div class="account-menu__user-avatar">
-                                                <img src="images/avatars/avatar-3.jpg" alt="">
-                                            </div>
-                                            <div class="account-menu__user-info">
-                                                <div class="account-menu__user-name">Helena Garcia</div>
-                                                <div class="account-menu__user-email">stroyka@example.com</div>
-                                            </div>
-                                        </a>
-                                        <div class="account-menu__divider"></div>
-                                        <ul class="account-menu__links">
-                                            <li><a href="{% url 'account-profile' %}">Edit Profile</a></li>
-                                            <li><a href="account-orders.html">Order History</a></li>
-                                            <li><a href="account-addresses.html">Addresses</a></li>
-                                            <li><a href="account-password.html">Password</a></li>
-                                        </ul>
-                                        <div class="account-menu__divider"></div>
-                                        <ul class="account-menu__links">
-                                            <li><a href="{% url 'account_logout' %}">Logout</a></li>
-                                        </ul>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

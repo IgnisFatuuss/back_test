@@ -3,6 +3,7 @@ from .models import *
 from ckeditor_uploader.widgets import CKEditorUploadingWidget 
 from django import forms
 from nested_admin import NestedTabularInline, NestedModelAdmin
+from modeltranslation.admin import TranslationAdmin
 
 
 class GallereisInline(NestedTabularInline):
@@ -32,13 +33,14 @@ class EmotionsInline(NestedTabularInline):
 
 
 class ProductsAdminForm(forms.ModelForm):
-    description = forms.CharField(label='Описание',widget=CKEditorUploadingWidget())
+    description_ru = forms.CharField(label='Описание',widget=CKEditorUploadingWidget())
+    description_en = forms.CharField(label='Описание',widget=CKEditorUploadingWidget())
     class Meta:
         model = Products
         fields = '__all__'
 
 @admin.register(Products)
-class ProductsAdmin(NestedModelAdmin):
+class ProductsAdmin(TranslationAdmin):
     prepopulated_fields = {'slug': ('name',),}
     form = ProductsAdminForm
     inlines = [VariationsProductInline, FaqsInline, ReviewsInline, EmotionsInline]
@@ -60,6 +62,7 @@ class BrandsAdmin(admin.ModelAdmin):
 class VariationsAdmin(admin.ModelAdmin):
     inlines = [AttributsInline,]
 
+
 # @admin.register(VariationProducts)
 # class VariationProductAdmin(admin.ModelAdmin):
 #     inlines = [GallereisInline,]
@@ -70,6 +73,9 @@ admin.site.register(WishList)
 admin.site.register(Faqs)
 admin.site.register(Reviews)
 admin.site.register(Emotions)
+admin.site.register(SliderProduct)
+admin.site.register(Sliders)
+admin.site.register(Banners)
 # admin.site.register(Gallereis)
 
 

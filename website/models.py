@@ -52,6 +52,8 @@ class Pages(models.Model):
     title = models.CharField("Заголовок", max_length=500, null=True)
     description = models.TextField("Описание", max_length=500, null=True)
     slug = models.SlugField("Ссылка", max_length=160, unique=True)
+    header = models.BooleanField("Шапка", default=False)
+    footer = models.BooleanField("Подвал", default=False)
 
     def get_absolute_url(self):
         return reverse('pages', kwargs={"slug": self.slug})
@@ -138,6 +140,19 @@ class Regions(models.Model):
         verbose_name = 'Регион'
         verbose_name_plural = 'Регионы'
 
+class Helps(models.Model):
+    data = models.DateTimeField(auto_now=True)
+    name = models.CharField("Название", max_length=500, null=True)
+    content = models.TextField("Контент", max_length=500, null=True)
+    title = models.CharField("Заголовок", max_length=500, null=True)
+    description = models.TextField("Описание", max_length=500, null=True)
+    slug = models.SlugField("Ссылка", max_length=160, unique=True)
 
+    def get_absolute_url(self):
+        return reverse('pages', kwargs={"slug": self.slug})
+
+    class Meta:
+        verbose_name = 'Руководство'
+        verbose_name_plural = 'Руководство'
 
 

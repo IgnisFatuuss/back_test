@@ -1,0 +1,60 @@
+{% extends 'include/base.html' %}
+
+{%load static%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock head %}
+
+<!-- content -->
+{% block content %}
+        
+<div class="site__body">
+    <div class="page-header">
+        <div class="page-header__container container">
+            <br>
+            <div class="page-header__title">
+                <h1>Часто задаваемые вопросы</h1>
+            </div>
+        </div>
+    </div>
+    <div class="block faq">
+        <div class="container">
+            <div class="faq__section">
+                <div class="faq__section-body">
+                    <div class="row">
+                        <div class="faq__section-column col-12 col-lg-6">
+                            <div class="typography">
+                                {% for faq in firsthalf %}
+                                <h6>{{ faq.question }}</h6>
+                                <p>
+                                   {{ faq.answer }}
+                                </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="faq__section-column col-12 col-lg-6">
+                            <div class="typography">
+                                {% for faq in lasthalf %}
+                                <h6>{{ faq.question }}</h6>
+                                <p>
+                                   {{ faq.answer }}
+                                </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- footer -->
+{% block footer_link %}
+
+{% endblock footer_link %}

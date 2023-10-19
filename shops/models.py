@@ -88,7 +88,8 @@ class Variations(models.Model):
 class Attributs(models.Model):
     name = models.CharField(max_length=255, verbose_name='Имя')
     variation = models.ForeignKey(Variations, on_delete=models.PROTECT, verbose_name='Вариации', related_name='attributs')
-    
+    file = models.FileField(default=False)
+    files = models.BooleanField(default=False)
     def __str__(self):
 
         return str(self.variation) + " : " +str(self.name)
@@ -217,3 +218,49 @@ class WishList(models.Model):
     class Meta:
         verbose_name = 'Список избранных товаров'
         verbose_name_plural = 'Список избранных товаров'
+
+class SliderProduct(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.CASCADE,  verbose_name='Продукт', default=False)
+    description = models.CharField(verbose_name='Описание', max_length=255)
+    image = models.ImageField(upload_to='shops/sliders', verbose_name='Картинка')
+
+    class Meta:
+        verbose_name = 'Товар для слайдера'
+        verbose_name_plural = 'Товары для слайдера'
+
+class Sliders(models.Model):
+    product = models.ManyToManyField(SliderProduct, verbose_name='Продукт')
+
+    class Meta:
+        verbose_name = 'Слайдер'
+        verbose_name_plural = 'Слайдеры'
+
+class Banners(models.Model):
+    product = models.ManyToManyField(Products, verbose_name='Продукт')
+    description = models.CharField(verbose_name='Описание', max_length=255, default=False)
+    image = models.ImageField(upload_to='shops/banners', verbose_name='Картинка', default=False)
+
+
+    class Meta:
+        verbose_name = 'Баннер'
+        verbose_name_plural = 'Баннеры'
+
+class Stores(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Имя')
+    description = models.CharField(verbose_name='Описание', max_length=255, default=False)
+    product = models.ManyToManyField(Products, verbose_name='Продукт')
+    contacts = models.CharField(max_length=255, verbose_name='Контакты')
+
+    class Meta:
+        verbose_name = 'Магазин'
+        verbose_name_plural = 'Магазины'
+
+class StoresReviews(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
+    store = models.ForeignKey(Stores, on_delete=models.CASCADE, verbose_name='Магазин')
+    review = models.CharField(max_length=255, verbose_name='Отзыв')
+    date = models.DateField(auto_now=True, verbose_name='Дата')
+
+    class Meta:
+        verbose_name = 'Отзыв о магазине'
+        verbose_name_plural = 'Отзывы о магазине'

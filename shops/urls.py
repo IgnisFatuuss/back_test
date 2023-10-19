@@ -5,6 +5,7 @@ from .views import get_price_variations
 
 
 urlpatterns = [
+    path('search/', views.SearchView.as_view(), name='search'),
     path('', views.ProductListView.as_view(), name='index'),
     # path('shopfilter/',  views.ShopFilter.as_view(), name='shopfilter'),
     path('filter/', views.FilterProductsByTag.as_view(), name='filter'),
@@ -25,4 +26,5 @@ urlpatterns = [
     path('wishlist/', views.WishListView.as_view(), name='wishlist'),
     path('add-to-wishlist/<str:slug>', views.AddToWishList.as_view(), name='add-to-wishlist'),
     path('remove-from-wishlist/<str:slug>', views.RemoveFromWishList.as_view(), name='remove-from-wishlist'),
+    
 ]
