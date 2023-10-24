@@ -228,13 +228,6 @@ class SliderProduct(models.Model):
         verbose_name = 'Товар для слайдера'
         verbose_name_plural = 'Товары для слайдера'
 
-class Sliders(models.Model):
-    product = models.ManyToManyField(SliderProduct, verbose_name='Продукт')
-
-    class Meta:
-        verbose_name = 'Слайдер'
-        verbose_name_plural = 'Слайдеры'
-
 class Banners(models.Model):
     product = models.ManyToManyField(Products, verbose_name='Продукт')
     description = models.CharField(verbose_name='Описание', max_length=255, default=False)
@@ -247,20 +240,13 @@ class Banners(models.Model):
 
 class Stores(models.Model):
     name = models.CharField(max_length=255, verbose_name='Имя')
+    slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name='URL')
     description = models.CharField(verbose_name='Описание', max_length=255, default=False)
     product = models.ManyToManyField(Products, verbose_name='Продукт')
     contacts = models.CharField(max_length=255, verbose_name='Контакты')
+    image = models.ImageField(upload_to='shops/stores', verbose_name='Картинка', default=False)
 
     class Meta:
         verbose_name = 'Магазин'
         verbose_name_plural = 'Магазины'
 
-class StoresReviews(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
-    store = models.ForeignKey(Stores, on_delete=models.CASCADE, verbose_name='Магазин')
-    review = models.CharField(max_length=255, verbose_name='Отзыв')
-    date = models.DateField(auto_now=True, verbose_name='Дата')
-
-    class Meta:
-        verbose_name = 'Отзыв о магазине'
-        verbose_name_plural = 'Отзывы о магазине'

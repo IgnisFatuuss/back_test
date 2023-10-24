@@ -39,6 +39,12 @@ class ProductsAdminForm(forms.ModelForm):
         model = Products
         fields = '__all__'
 
+class StoresAdminForm(forms.ModelForm):
+    description = forms.CharField(label='Описание',widget=CKEditorUploadingWidget())
+    class Meta:
+        model = Stores
+        fields = '__all__'
+
 @admin.register(Products)
 class ProductsAdmin(TranslationAdmin):
     prepopulated_fields = {'slug': ('name',),}
@@ -62,6 +68,10 @@ class BrandsAdmin(admin.ModelAdmin):
 class VariationsAdmin(admin.ModelAdmin):
     inlines = [AttributsInline,]
 
+@admin.register(Stores)
+class StoresAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',),}
+    form = StoresAdminForm
 
 # @admin.register(VariationProducts)
 # class VariationProductAdmin(admin.ModelAdmin):
@@ -74,7 +84,6 @@ admin.site.register(Faqs)
 admin.site.register(Reviews)
 admin.site.register(Emotions)
 admin.site.register(SliderProduct)
-admin.site.register(Sliders)
 admin.site.register(Banners)
 # admin.site.register(Gallereis)
 

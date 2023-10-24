@@ -2,28 +2,37 @@
     <h4 class="account-nav__title">Navigation</h4>
     <ul>
         <li class="account-nav__item {% if active == 'dashboard' %} account-nav__item--active {% endif %}">
-            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'dashboard' %}">Профиль</a>
         </li>
         <li class="account-nav__item {% if active == 'account-profile' %} account-nav__item--active {% endif %}">
-            <a href="{% url 'account-profile' %}">Edit Profile</a>
+            <a href="{% url 'account-profile' %}">Изменить Профиль</a>
         </li>
         <li class="account-nav__item {% if active == 'order-history' %} account-nav__item--active {% endif %}">
-            <a href="{% url 'orders-view' %}">Order History</a>
+            <a href="{% url 'orders-view' %}">История Заказов</a>
         </li>
         <!-- <li class="account-nav__item {% if active == 'order-details' %} account-nav__item--active {% endif %}">
             <a href="">Order Details</a> -->
         </li>
         <li class="account-nav__item {% if active == 'account-addresses' %} account-nav__item--active {% endif %}">
-            <a href="{% url 'addresses-view' %}">Addresses</a>
+            <a href="{% url 'addresses-view' %}">Адресы</a>
         </li>
         <li class="account-nav__item {% if active == 'edit-addresses' %} account-nav__item--active {% endif %}">
-            <a href="{% url 'edit-address-view' %}">Edit Address</a>
+            <a href="{% url 'edit-address-view' %}">Изменить адрес</a>
+        </li>
+        <li class="account-nav__item {% if active == 'reviews' %} account-nav__item--active {% endif %}">
+            <a href="account-login.html">Отзывы</a>
+        </li>
+        <li class="account-nav__item {% if active == 'faqs' %} account-nav__item--active {% endif %}">
+            <a href="account-login.html">Вопросы</a>
+        </li>
+        <li class="account-nav__item {% if active == 'claim' %} account-nav__item--active {% endif %}">
+            <a href="account-login.html">Претензии</a>
         </li>
         <li class="account-nav__item {% if active == 'password' %} account-nav__item--active {% endif %}">
-            <a href="account-password.html">Password</a>
+            <a href="account-password.html">Сменить пароль</a>
         </li>
         <li class="account-nav__item {% if active == 'logout' %} account-nav__item--active {% endif %}">
-            <a href="account-login.html">Logout</a>
+            <a href="account-login.html">Выйти</a>
         </li>
     </ul>
 </div>

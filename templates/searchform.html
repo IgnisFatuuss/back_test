@@ -3,9 +3,21 @@
     {% csrf_token %}
     <select class="search__categories" aria-label="Category" name="category">
         <option  value="None">Все категории</option>
-        {% for category in categories %}
+        {% comment %} {% for category in categories %}
         <option  value="{{ category.id }}">{{ category.name }}</option>
         {% endfor %}
+         {% endcomment %}
+
+         {% for category in categories_without_parent %}
+         <option  value="{{ category.id }}">{{ category.name }}</option>      
+                 {% for child in category.child.all %}
+                     <option  value="{{ child.id }}">{{ child.name }}</option>
+                             {% for grandchild in child.child.all %}                    
+                             <option  value="{{ grandchild.id }}">{{ grandchild.name }}</option>
+                             {% endfor %}         
+                 {% endfor %}    
+         {% endfor %}
+
         <!-- <option>Instruments</option>
         <option>&nbsp;&nbsp;&nbsp;&nbsp;Power Tools</option>
         <option>&nbsp;&nbsp;&nbsp;&nbsp;Hand Tools</option>
@@ -20,6 +32,7 @@
         <option>Music & Books</option>
         <option>Health & Beauty</option> -->
     </select>
+
     {{ form.search_description }}
     <button class="search__button search__button--type--submit" type="submit">
         <svg width="20px" height="20px">
@@ -28,6 +41,7 @@
     </button>
     <div class="search__border"></div>
 </form>
+
 <!-- <form class="search__form" action="">
     <select class="search__categories" aria-label="Category">
         <option value="all">All Categories</option>

@@ -1,5 +1,5 @@
 from django import template
-from website.models import Phones
+from website.models import *
 
 
 register = template.Library()
@@ -11,3 +11,10 @@ def header_phone():
     except Phones.DoesNotExist:
         return None
     
+@register.simple_tag()
+def get_site_logo():
+    return GeneralSettings.objects.first().logo.url
+
+@register.simple_tag()
+def get_site_name():
+    return GeneralSettings.objects.first().name

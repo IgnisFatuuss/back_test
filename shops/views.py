@@ -24,8 +24,6 @@ class ProductListView(ListView, GetTags):
     slug_field = 'slug'
     ordering = ['-id']
 
-
-
     def get_queryset(self):
         queryset = super().get_queryset()
         tag_id = self.request.GET.get('tag_id')  # Получаем значение id тега из GET-параметра
@@ -39,7 +37,7 @@ class ProductListView(ListView, GetTags):
         categories = Categories.objects.all()
         brands = Brands.objects.all()
         product_tag_1 = Products.objects.filter(tag__id=2)
-        context['slider'] = Sliders.objects.get(id = 1)
+        context['sliders'] = SliderProduct.objects.all()
         context['banner'] = Banners.objects.get(id = 1)
         context['categories'] = categories
         context['brands'] = brands
@@ -744,3 +742,35 @@ class SearchView(TemplateView):
         context['form'] = form 
               
         return context
+
+class StoresListView(ListView):
+    model = Stores
+    context_object_name = 'stores'
+    template_name = 'shops/stores.html'
+
+class StoreDetailView(DetailView):
+    model = Stores
+    template_name = 'shops/storedetail.html'
+    context_object_name = 'store'
+    slug_field = 'slug'
+
+class StoreAboutView(DetailView):
+    model = Stores
+    template_name = 'shops/storeabout.html'
+    context_object_name = 'store'
+    slug_field = 'slug'
+
+# class MakeStoreReview(View):
+#     @transaction.atomic
+#     def post(self, request, *args, **kwargs):
+#         form = StoreReviewForm(request.POST or None)
+#         if form.is_valid():
+#             new_review = form.save(commit=False)
+#             store = Stores.objects.get(id = self.request.POST.get('store-id'))
+#             new_review.text = form.cleaned_data['text']
+#             new_review.review = form.cleaned_data['review']
+#             new_review.store = store
+#             new_review.user = self.request.user
+#             new_review.save()
+#             return HttpResponseRedirect('/store/about/'+ str(Stores.objects.get(id = self.request.POST.get('store-id')).slug))
+#         return HttpResponseRedirect('/store/about/'+ str(Stores.objects.get(id = self.request.POST.get('store-id')).slug))

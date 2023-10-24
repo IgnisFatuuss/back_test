@@ -1,5 +1,5 @@
 from django import forms
-from .models import Orders, Reviews, Faqs
+from .models import *
 from django import forms
 from .models import User
 
@@ -58,4 +58,3 @@ class ProductSearchForm(forms.Form):
             'autocomplete': 'off'
         })
     )
-

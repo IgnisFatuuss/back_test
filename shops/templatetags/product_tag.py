@@ -7,4 +7,4 @@ register = template.Library()
 @register.inclusion_tag('searchform.html')
 def productsearchform():
     form = ProductSearchForm
-    return {'form' : form, 'categories' : Categories.objects.all(),}
+    return {'form' : form, 'categories_without_parent' : Categories.objects.filter(parent=None),}

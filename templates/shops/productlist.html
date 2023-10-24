@@ -17,7 +17,7 @@
             <div class="col-12 col-lg-15">
                 <div class="block-slideshow__body">
                     <div class="owl-carousel">
-                        {% for product in slider.product.all %}
+                        {% for product in sliders %}
                         <a class="block-slideshow__slide" href="">
                             <div class="block-slideshow__slide-image block-slideshow__slide-image--desktop" style="background-image: url('{{ product.image.url }}')"></div>
                             <div class="block-slideshow__slide-image block-slideshow__slide-image--mobile" style="background-image: url('{{ product.image.url }}"></div>

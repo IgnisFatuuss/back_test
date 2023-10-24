@@ -1,0 +1,73 @@
+{% extends 'include/base.html' %}
+
+{%load static%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock head %}
+
+<!-- content -->
+{% block content %}
+
+<div class="site__body">
+    <div class="page-header">
+        <div class="page-header__container container">
+            <div class="page-header__breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'store' slug=store.slug %}">Товары</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'storeabout' slug=store.slug %}">О магазине</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
+                            </svg>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="page-header__title">
+                <h1>{{ store.name }}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="container">
+            <div class="card mb-0 contact-us">
+                <div class="contact-us__map">
+                    <img class="product-image__img" src="{{ store.image.url }}" alt="">
+                </div>
+                <div class="card-body">
+                    <div class="contact-us__container">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 pb-4 pb-lg-0">
+                                <h4 class="contact-us__header card-title">Наши контакты</h4>
+                                <div class="contact-us__address">
+                                    <p>
+                                        {{ store.contacts }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <h4 class="contact-us__header card-title">О нас</h4>
+                                <p>
+                                    {{ store.description|safe }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+{% endblock content %}
+
+<!-- footer -->
+{% block footer_link %}
+
+{% endblock footer_link %}
