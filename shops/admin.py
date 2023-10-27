@@ -85,6 +85,7 @@ admin.site.register(Reviews)
 admin.site.register(Emotions)
 admin.site.register(SliderProduct)
 admin.site.register(Banners)
+admin.site.register(Claims)
 # admin.site.register(Gallereis)
 
 

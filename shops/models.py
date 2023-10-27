@@ -210,6 +210,19 @@ class Carts(models.Model):
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'
 
+class Claims(models.Model):
+    title = models.CharField(max_length=255, verbose_name='Заголовок')
+    product = models.ForeignKey(CartProduct, on_delete=models.PROTECT, verbose_name='Заказ')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
+    description = models.CharField(verbose_name='Описание', max_length=255)
+    image = models.ImageField(upload_to='shops/claims', verbose_name='Картинка', blank=True)
+    date = models.DateField(auto_now=True, verbose_name='Дата')
+
+
+    class Meta:
+        verbose_name = 'Претензия'
+        verbose_name_plural = 'Претензии'
+
 class WishList(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
     product = models.ManyToManyField(Products, blank=True, verbose_name='Продукт')
@@ -249,4 +262,12 @@ class Stores(models.Model):
     class Meta:
         verbose_name = 'Магазин'
         verbose_name_plural = 'Магазины'
-
+    
+class StoreStaff(models.Model):
+    STATUS = (
+        ('1', 'Владелец'),
+        ('2', 'Адмиинистратор')
+    )
+    status =  models.CharField(max_length=255, choices=STATUS, verbose_name='Оценка')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Пользователь')
+    store = models.ForeignKey(Stores, on_delete=models.CASCADE, verbose_name='Магазин')

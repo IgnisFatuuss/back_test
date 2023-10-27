@@ -12,23 +12,20 @@
 {% block content %}
 <div class="site__body">
     <div class="page-header">
-        <div class="page-header__container container">
-            <div class="page-header__title">
-                <h1>Мои Заказы</h1>
-            </div>
-        </div>
+        <br>
     </div>
     <div class="block">
         <div class="container">
+            
             <div class="row">
                 <div class="col-12 col-lg-3 d-flex">
-                    {% include 'profiles/include/account-navigation.html' with active='order-history' %}
+                    {% include 'profiles/include/account-navigation.html' with active='faqs' %}
                 </div>
                 <div class="col-12 col-lg-9 mt-4 mt-lg-0">
-                    {% if orders %}
+                    {% if faqs%}
                     <div class="card">
                         <div class="card-header">
-                            <h5>История заказов</h5>
+                            <h5>История отзывов</h5>
                         </div>
                         <div class="card-divider"></div>
                         <div class="card-table">
@@ -36,19 +33,23 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Заказ</th>
-                                            <th>Статус</th>
-                                            <th>Всего</th>
+                                            <th>Вопрос</th>
+                                            <th>Ответ</th>
+                                            <th>Продукт</th>
                                             <th>Дата</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for order in orders %}
+                                        {% for faq in faqs %}
                                         <tr>
-                                            <td><a href="{% url 'order-details' slug=order.id %}">№{{ order.id }}</a></td>
-                                            <td>Pending</td>
-                                            <td>${{order.order_sum}} за {{order.cart.total_products}} товар(а)</td>
-                                            <td>{{ order.date }}</td>
+                                            <td>{{faq.question}}</td>
+                                            {% if faq.answer %}
+                                            <td>{{faq.answer}}</td>
+                                            {% else %}
+                                            <td> Пока ответа нет</td>
+                                            {% endif %}
+                                            <td>{{faq.product.name}}</td>
+                                            <td>{{ faq.date }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -79,10 +80,12 @@
                         </div>
                     </div>
                     {% else %}
-                    <h1>У вас пока нет заказов</h1>
+                    <h1> У вас пока нету вопросов <h1>
                     {% endif %}
                 </div>
             </div>
+            
+
         </div>
     </div>
 </div>

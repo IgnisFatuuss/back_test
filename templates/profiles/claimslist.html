@@ -9,26 +9,21 @@
 {% endblock head %}
 
 <!-- content -->
-{% block content %}
-<div class="site__body">
+{% block content %}<div class="site__body">
     <div class="page-header">
-        <div class="page-header__container container">
-            <div class="page-header__title">
-                <h1>Мои Заказы</h1>
-            </div>
-        </div>
+        <br>
     </div>
     <div class="block">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-lg-3 d-flex">
-                    {% include 'profiles/include/account-navigation.html' with active='order-history' %}
+                    {% include 'profiles/include/account-navigation.html' with active='claims' %}
                 </div>
                 <div class="col-12 col-lg-9 mt-4 mt-lg-0">
-                    {% if orders %}
                     <div class="card">
+                        {% if claims %}
                         <div class="card-header">
-                            <h5>История заказов</h5>
+                            <h5>Ваши претензии</h5>
                         </div>
                         <div class="card-divider"></div>
                         <div class="card-table">
@@ -36,19 +31,21 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Заказ</th>
-                                            <th>Статус</th>
-                                            <th>Всего</th>
+                                            <th>Заголовок</th>
+                                            <th>Продукт</th>
                                             <th>Дата</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for order in orders %}
+                                        {% for claim in claims %}
                                         <tr>
-                                            <td><a href="{% url 'order-details' slug=order.id %}">№{{ order.id }}</a></td>
-                                            <td>Pending</td>
-                                            <td>${{order.order_sum}} за {{order.cart.total_products}} товар(а)</td>
-                                            <td>{{ order.date }}</td>
+                                            <td>{{claim.title}}</td>
+                                            <td>{{claim.product.product.name}}</td>
+                                            <td>{{ claim.date }}</td>
+                                            <td>
+                                                <a class="btn btn-primary"  href=""> Подробнее</a>
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -77,10 +74,10 @@
                                 </li>
                             </ul>
                         </div>
+                        {% else %}
+                        <h1> У вас пока нет претензий</h1>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    <h1>У вас пока нет заказов</h1>
-                    {% endif %}
                 </div>
             </div>
         </div>

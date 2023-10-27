@@ -13,28 +13,6 @@
 <div class="site__body">
     <div class="page-header">
         <div class="page-header__container container">
-            <div class="page-header__breadcrumb">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="index.html">Home</a>
-                            <svg class="breadcrumb-arrow" width="6px" height="9px">
-                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
-                            </svg>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="">Breadcrumb</a>
-                            <svg class="breadcrumb-arrow" width="6px" height="9px">
-                                <use xlink:href="images/sprite.svg#arrow-rounded-right-6x9"></use>
-                            </svg>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="page-header__title">
-                <h1>My Account</h1>
-            </div>
         </div>
     </div>
     <div class="block">
@@ -52,7 +30,7 @@
                             <h5 class="order-header__title">Заказ №{{ order.id }}</h5>
                             <div class="order-header__subtitle">
                                 Был создан <mark class="order-header__date">{{ order.date }}</mark>
-                                и сейчас <mark class="order-header__status">{{ order.status }}</mark>.
+                                и сейчас <mark class="order-header__status">{% if order.status == 1 %} не оплачен {% else %} оплачен {% endif %}</mark>.
                             </div>
                         </div>
                         <div class="card-divider"></div>
@@ -63,6 +41,7 @@
                                         <tr>
                                             <th>Продукты</th>
                                             <th>Всего</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody class="card-table__body card-table__body--merge-rows">
@@ -70,6 +49,13 @@
                                         <tr>
                                             <td>{{ product.product.name }} × {{ product.qty }}</td>
                                             <td>${{ product.final_price }}</td>
+                                            {% for claim in claims %}
+                                                {% if product != claim.product %}
+                                                    <td><a class="btn btn-xs btn-secondary" href="{% url 'make-claim' id=product.pk %}">Пожаловаться</a></td>
+                                                {% else %}
+                                                    <td>Вы уже подали претензию на этот товар</td>
+                                                {% endif %}
+                                            {% endfor %}
                                         </tr>
                                         {% endfor %}
                                     </tbody>

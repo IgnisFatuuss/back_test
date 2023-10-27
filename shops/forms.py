@@ -58,3 +58,14 @@ class ProductSearchForm(forms.Form):
             'autocomplete': 'off'
         })
     )
+
+class ClaimForm(forms.ModelForm):
+    class Meta:
+        model = Claims
+        fields = ('title', 'description')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget = forms.TextInput(attrs={ 'class': 'form-control', 'type': 'text'})
+        self.fields['description'].widget = forms.Textarea(attrs={ 'class': 'form-control', 'type': 'text'})
+

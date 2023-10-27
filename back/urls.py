@@ -23,6 +23,7 @@ urlpatterns += i18n_patterns(
     path('', include('website.urls')),
     path('', include('shops.urls')),
     path('', include('Profile.urls')),
+    path('', include('moderation.urls')),
 )
 
 if settings.DEBUG:

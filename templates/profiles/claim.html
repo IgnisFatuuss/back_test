@@ -1,0 +1,52 @@
+{% extends 'include/base.html' %}
+
+{%load static%}
+
+
+<!-- head -->
+{% block head %}
+
+{% endblock head %}
+
+<!-- content -->
+{% block content %}
+
+<div class="page-header">
+    <div class="page-header__container container">
+    </div>
+</div>
+<div class="block">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-3 d-flex">
+                {% include 'profiles/include/account-navigation.html' with active='order-details' %}
+            </div>
+            <div class="col-12 col-lg-9 mt-4 mt-lg-0">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Пожаловаться на товар</h5>
+                        <br>
+
+                        <a href="{% url 'product' slug=product.product.slug%}">{{ product.product.name }}</a> в количестве {{product.qty}}
+                    </div>
+                    <div class="card-body">
+                    <form method='post' action="{% url 'make-claim' id=product.id%}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        
+                        <div class="form-group mt-5 mb-0">
+                            <button class="btn btn-primary" type="submit">Отправить</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- footer -->
+{% block footer_link %}
+
+{% endblock footer_link %}

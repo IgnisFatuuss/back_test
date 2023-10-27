@@ -5,8 +5,10 @@ from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.generic import ListView, DetailView, TemplateView, View
 from .models import *
 from shops.models import *
+from shops.forms import ReviewForm, ClaimForm
 from .forms import *
 from django.db import transaction
+from django.http import Http404, HttpResponseForbidden
 # from .models import Pages, User
 # from website.models import GeneralSettings
 # from django.contrib.auth import authenticate, login, logout
@@ -36,7 +38,7 @@ class EditeProfile(View):
                 for field, value in form.cleaned_data.items():
                     setattr(p, field, value)
                 p.save()
-                return HttpResponseRedirect('/addressview/')
+                return HttpResponseRedirect('/account/addressview/')
         else:
             form = ProfileForm(request.POST or None)
             if form.is_valid():
@@ -45,9 +47,9 @@ class EditeProfile(View):
                     setattr(edited_profile, field, value)
                 edited_profile.user = self.request.user
                 edited_profile.save()  # Сохраните объект профиля
-                return HttpResponseRedirect('/addressview/')  # Перенаправить пользователя на страницу профиля после успешного сохранения
+                return HttpResponseRedirect('/account/addressview/')  # Перенаправить пользователя на страницу профиля после успешного сохранения
         
-        return HttpResponseRedirect('/addressview/')
+        return HttpResponseRedirect('/account/addressview/')
     
 class EditAddressView(View):
     def get(self, request, *args, **kwargs):
@@ -74,46 +76,66 @@ class EditAddress(View):
                         setattr(edited_address, field, value)
                 edited_address.user = self.request.user
                 edited_address.save()  # Сохраните объект профиля
-                return HttpResponseRedirect('/addressview/')  # Перенаправить пользователя на страницу профиля после успешного сохранения
+                return HttpResponseRedirect('/account/addressview/')  # Перенаправить пользователя на страницу профиля после успешного сохранения
         else:
             form = AdressEditForm(request.POST or None)
             if form.is_valid():
                 address = Adress.objects.get(id=slug)
+                if request.user != address.user:
+                    return HttpResponseForbidden() 
                 for field, value in form.cleaned_data.items():
                     setattr(address, field, value)
                 address.save()
                 request.session['address-slug'] = None
-                return HttpResponseRedirect('/addressview/')
+                return HttpResponseRedirect('/account/addressview/')
         
-        return HttpResponseRedirect('/addressview/')
+        return HttpResponseRedirect('/account/addressview/')
 
 class RemoveAddress(View):
     def get(self, request, *args, **kwargs):
         address = Adress.objects.filter(id = kwargs['slug'])
+        if request.user != address.user:
+            return HttpResponseForbidden() 
         if address:
             address.delete()
         
-        return HttpResponseRedirect('/addressview/')
+        return HttpResponseRedirect('/account/addressview/')
 
 class AddressView(ListView):
     model = Adress
     template_name = 'profiles/account-addresses.html'
     context_object_name = 'addresses'
 
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+
+        return queryset
+
 class MakeDefalut(View):
     def get(self, request, *args, **kwargs):
         address = Adress.objects.get(id = kwargs['slug'])
+        if request.user != address.user:
+            return HttpResponseForbidden() 
         if address:
             address.default = True
             address.save()
-        return HttpResponseRedirect('/addressview/')
+        return HttpResponseRedirect('/account/addressview/')
 
 class DashboardView(View):
     def get(self, request, *args, **kwargs):
+        try:
+            address = Adress.objects.get(default=True, user = self.request.user)
+            orders = Orders.objects.filter(user = self.request.user)
+            profile = Profile.objects.get(user = self.request.user)
+        except:
+            address = None
+            orders = None
+            profile = None
         context ={
-            'profile' : Profile.objects.get(user = self.request.user),
-            'default_address' : Adress.objects.get(default=True),
-            'orders' : Orders.objects.all(),
+            'profile' : profile,
+            'default_address' : address,
+            'orders' : orders,
         }
 
         return render(request, 'profiles/dashboard.html', context)
@@ -126,7 +148,7 @@ class OrdersView(ListView):
 
     def get_queryset(self) -> QuerySet[Any]:
         queryset = super().get_queryset()
-        queryset.filter(user=self.request.user)
+        queryset = queryset.filter(user=self.request.user)
 
         return queryset
 
@@ -135,12 +157,133 @@ class OrderDetails(DetailView):
     template_name = 'profiles/account-order-details.html'
     context_object_name = 'order'
     slug_field = 'id'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart = Orders.objects.get(id = self.kwargs['slug']).cart
         cartproducts = cart.products.all()
         context['cartproducts'] = cartproducts
+        context['claims'] = Claims.objects.filter(user=self.request.user)
         return context
+    
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            order = self.get_object()
+            if request.user != order.user:
+                return HttpResponseForbidden()
+            return super().dispatch(request, *args, **kwargs)
+        except Orders.DoesNotExist:
+            raise Http404("Order does not exist")
+
+class ReviewsView(ListView):
+    model = Reviews
+    template_name = 'profiles/reviews-history.html'
+    context_object_name = 'reviews'
+    ordering = ['-id']
+
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+
+        return queryset
+
+class ReviewEditView(View):
+    def get(self, request, *args, **kwargs):
+        
+        review = Reviews.objects.get(id = kwargs['id'])
+        if request.user != review.user:
+            return HttpResponseForbidden()
+        context ={
+            'form' : ReviewForm,
+            'review' : review,
+        }
+
+        return render(request, 'profiles/edit-review.html', context)
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        form = ReviewForm(request.POST or None)
+        review = Reviews.objects.get(id =  kwargs['id'])
+        if request.user != review.user:
+            return HttpResponseForbidden()
+        if form.is_valid():
+            if self.request.user == review.user:
+                review.review = form.cleaned_data['review']
+                review.text = form.cleaned_data['text']
+                review.save()
+        return HttpResponseRedirect('/account/reviews-history')
+
+class FaqView(ListView):
+    model = Faqs
+    template_name = 'profiles/faq-history.html'
+    context_object_name = 'faqs'
+    ordering = ['-id']
+
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+
+        return queryset
+    
+class MakeClaim(View):
+    def get(self, request, *args, **kwargs):
+        cart_product = CartProduct.objects.get(id=kwargs['id'])
+        if request.user != cart_product.user:
+            return HttpResponseForbidden() 
+
+        form = ClaimForm()
+        context = {
+            'product' : cart_product,
+            'form': form,
+        }
+        return render(request, 'profiles/claim.html', context)
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        form = ClaimForm(request.POST or None)
+        cart_product = CartProduct.objects.get(id=kwargs['id'])
+        if request.user != cart_product.user:
+            return HttpResponseForbidden() 
+        print(form.errors)
+        if form.is_valid():
+            new_claim = form.save(commit=False)
+            new_claim.user = request.user
+            new_claim.product = cart_product
+            for field, value in form.cleaned_data.items():
+                setattr(new_claim, field, value)
+            new_claim.save()
+            return HttpResponseRedirect('/account/orders')
+        return HttpResponseRedirect('/account/orders')
+        
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            cart_product = CartProduct.objects.get(id=kwargs['id'])
+            if request.user != cart_product.user:
+                return HttpResponseForbidden() 
+            if Claims.objects.filter(user=request.user, product=cart_product).exists():
+                return HttpResponseForbidden()
+
+            return super().dispatch(request, *args, **kwargs)
+        except CartProduct.DoesNotExist:
+            raise Http404("Product does not exist")
+
+class ClaimsView(ListView):
+    model = Claims
+    template_name = 'profiles/claimslist.html'
+    context_object_name = 'claims'
+    ordering_by = '-id'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+
+        return queryset
+
+class StoreProfile(View):
+    def get(self, request, *args, **kwargs):
+        
+
 
 # class EditProfileView(CustomHtmxMixin, TemplateView):
 #     template_name = 'profile.html'
